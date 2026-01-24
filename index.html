@@ -9,11 +9,14 @@
             --primary: #2c3e50;
             --accent: #3498db;
             --bg: #f4f7f6;
+            --success: #27ae60;
+            --danger: #e74c3c;
         }
+
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
-        .nav-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         
-        /* Botões de Alternância */
+        /* Navegação */
+        .nav-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             padding: 10px 20px;
             border: none;
@@ -25,23 +28,58 @@
         }
         .nav-btn.active { background: var(--accent); color: white; }
 
+        /* Containers de Conteúdo */
         .form-content { display: none; animation: fadeIn 0.4s; }
         .form-content.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Estilos Reutilizáveis dos Formulários */
-        .container { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin: 0 auto; }
-        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        /* --- PADRONIZAÇÃO DE LARGURA --- */
+        .container { 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 600px; /* Altere aqui para mudar o tamanho de todos */
+            margin: 0 auto; 
+            box-sizing: border-box;
+        }
+
+        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-family: inherit;
+        }
+
+        /* Grades de botões e campos */
+        .ramais-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        button.action-btn { padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
-        .btn-copy { background: #3498db; }
-        .btn-export { background: #27ae60; }
-        .btn-clear { background: #e74c3c; grid-column: span 2; }
-        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: #27ae60; }
+        
+        button.action-btn { 
+            padding: 12px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            color: white; 
+            transition: 0.2s;
+        }
+
+        .btn-copy { background: var(--accent); }
+        .btn-export { background: var(--success); }
+        .btn-clear { background: var(--danger); grid-column: span 2; }
+        .btn-copy:hover { opacity: 0.8; }
+        
+        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
+        .required { color: var(--danger); }
+        .fcr-highlight { border: 2px solid var(--success) !important; background-color: #f0fff4 !important; }
     </style>
 </head>
 <body>
@@ -65,7 +103,7 @@
                     <option value="Açougue">Açougue</option>
                     <option value="Padaria">Padaria</option>
                     <option value="Hortifruti">Hortifruti</option>
-                    <option value="Açougue">Frios</option>
+                    <option value="Frios">Frios</option>
                 </select>
             </div>
             <div class="form-group"><label>Motivo:</label><textarea id="motivo"></textarea></div>
@@ -81,507 +119,151 @@
 
 <div id="mask2" class="form-content">
     <div class="container">
-                <form id="form2">
-            <p style="text-align:center">
-
-                <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Tentativa de Contato - TI</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; display: flex; justify-content: center; padding: 20px; }
-        .container { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .field-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; }
-        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 5px rgba(52,152,219,0.3); }
-        .ramais-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .required { color: #e74c3c; }
-        .actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
-        button { flex: 1; min-width: 120px; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        
-        .btn-copy { background-color: #3498db; color: white; }
-        .btn-copy:hover { background-color: #2980b9; }
-        
-        .btn-export { background-color: #2ecc71; color: white; }
-        .btn-export:hover { background-color: #27ae60; }
-
-        .btn-clear { background-color: #95a5a6; color: white; }
-        .btn-clear:hover { background-color: #7f8c8d; }
-
-        #status-msg { margin-top: 15px; font-size: 0.9em; text-align: center; color: #27ae60; height: 20px; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2>Registro de Contato</h2>
-    
-    <div class="field-group">
-        <label>Número do Chamado <span class="required">*</span></label>
-        <input type="text" id="chamado" placeholder="Ex: 123456">
-    </div>
-
-    <div class="field-group">
-        <label>Preciso falar com:</label>
-        <input type="text" id="destinatario" placeholder="Ex: Gerente ou Nome do colaborador">
-    </div>
-
-    <div class="field-group">
-        <label>Ramais Utilizados (1º é obrigatório) <span class="required">*</span></label>
-        <div class="ramais-grid">
-            <input type="text" id="ramal1" class="ramal" placeholder="Ramal 1">
-            <input type="text" id="ramal2" class="ramal" placeholder="Ramal 2">
-            <input type="text" id="ramal3" class="ramal" placeholder="Ramal 3">
-            <input type="text" id="ramal4" class="ramal" placeholder="Ramal 4">
-        </div>
-    </div>
-
-    <div class="actions">
-        <button class="btn-copy" onclick="processar('copy')">Copiar Texto</button>
-        <button class="btn-export" onclick="processar('export')">Exportar TXT</button>
-        <button class="btn-clear" onclick="limparCampos()">Limpar Campos</button>
-    </div>
-
-    <div id="status-msg"></div>
-</div>
-
-<script>
-    function formatarTexto() {
-        const chamado = document.getElementById('chamado').value.trim();
-        const destinatario = document.getElementById('destinatario').value.trim();
-        const r1 = document.getElementById('ramal1').value.trim();
-        const r2 = document.getElementById('ramal2').value.trim();
-        const r3 = document.getElementById('ramal3').value.trim();
-        const r4 = document.getElementById('ramal4').value.trim();
-
-        if (!chamado || !r1) {
-            alert("Erro: Preencha o número do chamado e pelo menos o Ramal 1.");
-            return null;
-        }
-
-        let ramais = [r1, r2, r3, r4].filter(r => r !== "").join(", ");
-        let dataHora = new Date().toLocaleString('pt-BR');
-
-        return `--- TENTATIVA DE CONTATO SEM ÊXITO ---
-Data/Hora: ${dataHora}
-Chamado: ${chamado}
-Solicitado falar com: ${destinatario || "Não informado"}
-Ramais discados: ${ramais}
-Status: Loja não atendeu às tentativas de contato telefônico.`;
-    }
-
-    function processar(acao) {
-        const texto = formatarTexto();
-        if (!texto) return;
-
-        if (acao === 'copy') {
-            navigator.clipboard.writeText(texto).then(() => {
-                const msg = document.getElementById('status-msg');
-                msg.style.color = "#27ae60";
-                msg.innerText = "Copiado com sucesso!";
-                setTimeout(() => msg.innerText = "", 3000);
-            });
-        } else if (acao === 'export') {
-            const blob = new Blob([texto], { type: 'text/plain' });
-            const link = document.createElement('a');
-            const chamado = document.getElementById('chamado').value;
-            link.href = URL.createObjectURL(blob);
-            link.download = `contato_falho_${chamado}.txt`;
-            link.click();
-        }
-    }
-
-    function limparCampos() {
-        if (confirm("Deseja limpar todos os dados preenchidos?")) {
-            document.querySelectorAll('input').forEach(input => input.value = '');
-            const msg = document.getElementById('status-msg');
-            msg.style.color = "#e67e22";
-            msg.innerText = "Campos limpos.";
-            setTimeout(() => msg.innerText = "", 2000);
-        }
-    }
-</script>
-
-</body>
-</html>
-                
-            </p>
-            
+        <h2>Registro de Contato</h2>
+        <form id="form2">
+            <div class="form-group">
+                <label>Número do Chamado <span class="required">*</span></label>
+                <input type="text" id="chamado" placeholder="Ex: 123456">
+            </div>
+            <div class="form-group">
+                <label>Preciso falar com:</label>
+                <input type="text" id="destinatario" placeholder="Ex: Gerente">
+            </div>
+            <div class="form-group">
+                <label>Ramais Utilizados (1º obrigatório) <span class="required">*</span></label>
+                <div class="ramais-grid">
+                    <input type="text" id="ramal1" placeholder="Ramal 1">
+                    <input type="text" id="ramal2" placeholder="Ramal 2">
+                    <input type="text" id="ramal3" placeholder="Ramal 3">
+                    <input type="text" id="ramal4" placeholder="Ramal 4">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-copy" onclick="processarContato('copy')">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="processarContato('export')">Exportar</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('form2')">Limpar</button>
+            </div>
+            <div id="status-contato" class="status-msg"></div>
         </form>
     </div>
 </div>
 
 <div id="mask3" class="form-content">
     <div class="container">
-
-        <form id="form3">
-            <p style="text-align:center">
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Atendimento</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-color: #f0f2f5; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .container { 
-            background: #fff; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); 
-            width: 100%;
-            max-width: 700px;
-            box-sizing: border-box;
-        }
-
-        .brand-header {
-            text-align: center;
-            color: #1a3a5a; 
-            margin-bottom: 5px;
-            font-size: 2em;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            text-align: center;
-            color: #555;
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 1.2em;
-            font-weight: 400;
-        }
-        
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
-        
-        input[type="text"], input[type="email"], select { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 20px; 
-            border: 1px solid #ccd0d5; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 15px;
-        }
-
-        textarea { 
-            width: 100%; 
-            height: 110px; 
-            padding: 12px; 
-            border: 1px solid #ccd0d5; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            background-color: #fdfdfd; 
-            margin-bottom: 20px; 
-            font-family: inherit;
-            font-size: 15px;
-            resize: vertical;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-        }
-
-        button {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        #copiarTextoBtn { background-color: #007bff; color: white; flex: 2; }
-        #copiarTextoBtn:hover { background-color: #0056b3; }
-
-        #downloadTxtBtn { background-color: #28a745; color: white; flex: 1; }
-        #downloadTxtBtn:hover { background-color: #218838; }
-        
-        #resetBtn { 
-            background-color: #dc3545; 
-            color: white; 
-            width: 100%; 
-            margin-top: 5px;
-        }
-        #resetBtn:hover { background-color: #c82333; }
-
-        #feedback { 
-            margin-top: 20px; 
-            font-weight: 600; 
-            text-align: center; 
-            min-height: 20px;
-        }
-
-        .fcr-highlight { 
-            border: 2px solid #28a745 !important; 
-            background-color: #f0fff4 !important; 
-        }
-
-        #dataAtendimento { background-color: #e9ecef; color: #495057; cursor: not-allowed; }
-        
-        #equipment-fields { display: none; }
-
-        @media (max-width: 600px) {
-            .action-buttons { flex-direction: column; }
-        }
-    </style>
-</head>
-<body>
-    
-        <h2>Registro Rápido de Contato</h2>
-
-    <div class="container">
-        <form id="registroForm" onsubmit="return false;"> 
-            
-            <label for="dataAtendimento">Data e Hora do Atendimento:</label>
-            <input type="text" id="dataAtendimento" readonly>
-
-            <label for="tipoAtendimento">Tipo de Atendimento:</label>
-            <select id="tipoAtendimento" onchange="checkFCR()">
-                
-                <option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option>
-                <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
-            </select>
-
-            <label for="nome">Nome do Solicitante:</label>
-            <input type="text" id="nome" placeholder="Nome Completo" required>
-
-            <label for="codLoja">Código da Loja ou Setor:</label>
-            <input type="text" id="codLoja" placeholder="Ex: 010 ou RH" required>
-
-            <label for="telefone1">Telefone Principal:</label>
-            <input type="text" id="telefone1" placeholder="(00) 00000-0000" required>
-            
-            <label for="telefone2">Telefone Secundário (Opcional):</label>
-            <input type="text" id="telefone2" placeholder="(00) 00000-0000">
-
-            
-            <label for="local">Localização do Problema:</label>
-            <select id="local">
-                <option value="PDV">Frente de Caixa (PDV)</option>
-                <option value="Escritorio">Escritório / Administrativo</option>
-                <option value="Estoque">CD</option>
-                <option value="Estoque">RM</option>
-                <option value="Estoque">Loja</option>
-                <option value="Outros">Outros</option>
-            </select>
-
-            <label for="tipoProblema">Categoria:</label>
-            <select id="tipoProblema" onchange="toggleFields()">
-                <option value="Sistema">Problema de Sistema (Software)</option>
-                <option value="Equipamento">Problema de Equipamento (Hardware)</option>
-            </select>
-            
-            <div id="equipment-fields">
-                <label for="equipamento">Equipamento Específico:</label>
-                <select id="equipamento">
-                    <option value="Computador">Computador / Notebook</option>
-                    <option value="Impressora">Impressora</option>
-                    <option value="Pinpad">Pinpad</option>
-                    <option value="Balança">Balança</option>
-                    <option value="Leitor">Leitor de Código</option>
-                    <option value="Outro">Outro</option>
+        <h2>Registro de Atendimento</h2>
+        <form id="registroForm">
+            <div class="form-group">
+                <label>Data e Hora:</label>
+                <input type="text" id="dataAtendimento" readonly style="background:#eee">
+            </div>
+            <div class="form-group">
+                <label>Tipo:</label>
+                <select id="tipoAtendimento" onchange="checkFCR()">
+                    <option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option>
+                    <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
                 </select>
-
-                <label for="nPatrimonio">Nº Patrimônio / Série:</label>
-                <input type="text" id="nPatrimonio" placeholder="Etiqueta de patrimônio">
             </div>
-
-            <label for="problemaRelatado">O que foi relatado pelo usuário?</label>
-            <textarea id="problemaRelatado" placeholder="Descreva brevemente a falha..." required></textarea>
-            
-            <label for="procedimentoRealizado">O que você fez para resolver?</label>
-            <textarea id="procedimentoRealizado" placeholder="Descreva os testes e a solução..." required></textarea>
-            
-            <div class="action-buttons">
-                <button id="copiarTextoBtn" onclick="copiarMascara()">Copiar para Clipboard</button>
-                <button id="downloadTxtBtn" onclick="gerarRelatorioTxt()">Baixar .TXT</button>
+            <div class="ramais-grid">
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome"></div>
+                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="codLoja"></div>
             </div>
-        </form>
-        
-        <button id="resetBtn" onclick="resetForm()">Limpar Tudo</button>
-        
-        <p id="feedback"></p>
-    </div>
-
-    <script>
-        const form = document.getElementById('registroForm');
-        const procedimentoRealizado = document.getElementById('procedimentoRealizado');
-        const equipmentFields = document.getElementById('equipment-fields');
-        const feedback = document.getElementById('feedback');
-        
-        function setDate() {
-            const now = new Date();
-            const format = (val) => String(val).padStart(2, '0');
-            const dataStr = `${format(now.getDate())}/${format(now.getMonth()+1)}/${now.getFullYear()} ${format(now.getHours())}:${format(now.getMinutes())}`;
-            document.getElementById('dataAtendimento').value = dataStr;
-        }
-
-        window.onload = () => { setDate(); toggleFields(); }
-
-        function toggleFields() {
-            const isEquip = document.getElementById('tipoProblema').value === "Equipamento";
-            equipmentFields.style.display = isEquip ? 'block' : 'none';
-        }
-
-        function checkFCR() {
-            const isFcr = document.getElementById('tipoAtendimento').value.includes("FCR");
-            procedimentoRealizado.classList.toggle('fcr-highlight', isFcr);
-        }
-
-        function resetForm() {
-            if (confirm("Deseja apagar todos os dados informados?")) {
-                form.reset();
-                setDate();
-                toggleFields();
-                checkFCR();
-                feedback.style.color = "green";
-                feedback.textContent = "✅ Formulário reiniciado.";
-                setTimeout(() => feedback.textContent = "", 3000);
-            }
-        }
-
-        function getMascaraTexto() {
-            const campos = {
-                data: document.getElementById('dataAtendimento').value,
-                tipo: document.getElementById('tipoAtendimento').value,
-                nome: document.getElementById('nome').value,
-                loja: document.getElementById('codLoja').value,
-                tel1: document.getElementById('telefone1').value,
-                tel2: document.getElementById('telefone2').value,
-                email: document.getElementById('email').value || 'Não informado',
-                local: document.getElementById('local').value,
-                cat: document.getElementById('tipoProblema').value,
-                prob: document.getElementById('problemaRelatado').value,
-                proc: document.getElementById('procedimentoRealizado').value
-            };
-
-            if(!campos.nome || !campos.loja || !campos.prob || !campos.proc) {
-                feedback.style.color = "red";
-                feedback.textContent = "⚠️ Preencha os campos obrigatórios!";
-                return null;
-            }
-
-            let equipInfo = "";
-            if(campos.cat === "Equipamento") {
-                equipInfo = `Equipamento: ${document.getElementById('equipamento').value}\nPatrimônio: ${document.getElementById('nPatrimonio').value || 'N/I'}\n`;
-            }
-
-            // MÁSCARA SEM O TÍTULO INICIAL E COM ORDEM INVERTIDA
-            return `==================================\n` +
-                   `PROBLEMA RELATADO:\n` +
-                   `${campos.prob}\n\n` +
-                   `PROCEDIMENTO REALIZADO:\n` +
-                   `${campos.proc}\n` +
-                   `==================================\n` +
-                   `--- INFORMAÇÕES DE CONTATO ---\n` +
-                   `Data/Hora: ${campos.data}\n` +
-                   `Tipo: ${campos.tipo}\n` +
-                   `Solicitante: ${campos.nome}\n` +
-                   `Loja/Setor: ${campos.loja}\n` +
-                   `Telefone: ${campos.tel1} ${campos.tel2 ? '/ ' + campos.tel2 : ''}\n` +
-                   `E-mail: ${campos.email}\n` +
-                   `Local: ${campos.local}\n` +
-                   `Categoria: ${campos.cat}\n` +
-                   equipInfo +
-                   `==================================`;
-        }
-
-        function copiarMascara() {
-            const texto = getMascaraTexto();
-            if(!texto) return;
-
-            navigator.clipboard.writeText(texto).then(() => {
-                feedback.style.color = "#007bff";
-                feedback.textContent = "✅ Copiado com sucesso!";
-                setTimeout(() => feedback.textContent = "", 3000);
-            });
-        }
-
-        function gerarRelatorioTxt() {
-            const texto = getMascaraTexto();
-            if(!texto) return;
-
-            const blob = new Blob([texto], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            const nomeArquivo = document.getElementById('codLoja').value + "_" + document.getElementById('nome').value.replace(/\s/g, '_');
+            <div class="form-group"><label>Telefone:</label><input type="text" id="telefone1"></div>
+            <div class="form-group"><label>Descrição do Problema:</label><textarea id="problemaRelatado"></textarea></div>
+            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="procedimentoRealizado"></textarea></div>
             
-            a.href = url;
-            a.download = `Atendimento_${nomeArquivo}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            feedback.style.color = "#28a745";
-            feedback.textContent = "💾 Arquivo baixado!";
-            setTimeout(() => feedback.textContent = "", 3000);
-        }
-    </script>
-</body>
-</html>
-                
-            </p>
-            
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-copy" onclick="copiarMascara()">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="gerarRelatorioTxt()">Exportar</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar</button>
+            </div>
+            <div id="feedback" class="status-msg"></div>
         </form>
     </div>
 </div>
 
 <script>
+    // --- LÓGICA DE NAVEGAÇÃO ---
     function switchForm(formId, btn) {
-        // Esconde todos
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        // Mostra o selecionado
         document.getElementById(formId).classList.add('active');
         btn.classList.add('active');
+        if(formId === 'mask3') setDate();
     }
 
-    function formatarBalanca() {
-        const data = new Date().toLocaleString('pt-BR');
-        return `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
+    function limpar(formId) {
+        if(confirm("Deseja limpar todos os campos?")) {
+            document.getElementById(formId).reset();
+            if(formId === 'registroForm') setDate();
+        }
     }
 
+    // --- FUNÇÕES MÁSCARA 1 (BALANÇA) ---
     function copiarTexto(tipo) {
-        let texto = "";
-        if(tipo === 'balanca') texto = formatarBalanca();
-        // Adicione os ifs para as outras máscaras aqui
-        
-        navigator.clipboard.writeText(texto).then(() => {
-            document.getElementById(`status-${tipo}`).innerText = "Copiado!";
-            setTimeout(() => { document.getElementById(`status-${tipo}`).innerText = ""; }, 2000);
-        });
+        const data = new Date().toLocaleString('pt-BR');
+        const texto = `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
+        navigator.clipboard.writeText(texto);
+        document.getElementById('status-balanca').innerText = "Copiado!";
+        setTimeout(() => document.getElementById('status-balanca').innerText = "", 2000);
     }
 
     function exportarTXT(tipo) {
-        let texto = formatarBalanca();
+        const data = new Date().toLocaleString('pt-BR');
+        const texto = `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
         const blob = new Blob([texto], { type: 'text/plain' });
         const link = document.createElement('a');
-        link.download = `registro_${tipo}.txt`;
+        link.download = `carga_balanca.txt`;
         link.href = window.URL.createObjectURL(blob);
         link.click();
     }
 
-    function limpar(formId) {
-        if(confirm("Limpar campos?")) document.getElementById(formId).reset();
+    // --- FUNÇÕES MÁSCARA 2 (CONTATO) ---
+    function processarContato(acao) {
+        const chamado = document.getElementById('chamado').value;
+        const r1 = document.getElementById('ramal1').value;
+        if (!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
+        
+        const texto = `--- TENTATIVA DE CONTATO ---\nData: ${new Date().toLocaleString()}\nChamado: ${chamado}\nRamais: ${r1}\nStatus: Sem êxito.`;
+        
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            document.getElementById('status-contato').innerText = "Copiado!";
+        } else {
+            const blob = new Blob([texto], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.download = `contato_${chamado}.txt`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
     }
+
+    // --- FUNÇÕES MÁSCARA 3 (ATENDIMENTO) ---
+    function setDate() {
+        const now = new Date();
+        document.getElementById('dataAtendimento').value = now.toLocaleString('pt-BR');
+    }
+
+    function checkFCR() {
+        const isFcr = document.getElementById('tipoAtendimento').value.includes("FCR");
+        document.getElementById('procedimentoRealizado').classList.toggle('fcr-highlight', isFcr);
+    }
+
+    function copiarMascara() {
+        const texto = `PROBLEMA: ${document.getElementById('problemaRelatado').value}\nPROCEDIMENTO: ${document.getElementById('procedimentoRealizado').value}\nCONTATO: ${document.getElementById('nome').value}`;
+        navigator.clipboard.writeText(texto);
+        document.getElementById('feedback').innerText = "Copiado!";
+    }
+
+    function gerarRelatorioTxt() {
+        const texto = `ATENDIMENTO\nSolicitante: ${document.getElementById('nome').value}`;
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `atendimento.txt`;
+        a.click();
+    }
+
+    window.onload = setDate;
 </script>
 
 </body>
