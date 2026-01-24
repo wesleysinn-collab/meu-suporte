@@ -33,19 +33,19 @@
         .form-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- PADRONIZAÇÃO DE LARGURA --- */
+        /* PADRONIZAÇÃO DE LARGURA */
         .container { 
             background: #fff; 
             padding: 25px; 
             border-radius: 8px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             width: 100%; 
-            max-width: 600px; /* Altere aqui para mudar o tamanho de todos */
+            max-width: 600px; 
             margin: 0 auto; 
             box-sizing: border-box;
         }
 
-        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; }
+        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; text-align: left; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
         
@@ -58,28 +58,25 @@
             font-family: inherit;
         }
 
-        /* Grades de botões e campos */
+        textarea { height: 80px; resize: vertical; }
+
         .ramais-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         
         button.action-btn { 
-            padding: 12px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            color: white; 
-            transition: 0.2s;
+            padding: 12px; border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: bold; color: white; transition: 0.2s;
         }
 
         .btn-copy { background: var(--accent); }
         .btn-export { background: var(--success); }
         .btn-clear { background: var(--danger); grid-column: span 2; }
-        .btn-copy:hover { opacity: 0.8; }
         
         .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
         .required { color: var(--danger); }
         .fcr-highlight { border: 2px solid var(--success) !important; background-color: #f0fff4 !important; }
+        
+        #equipment-fields { display: none; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px dashed #ccc; }
     </style>
 </head>
 <body>
@@ -163,26 +160,68 @@
                     <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
                 </select>
             </div>
+
             <div class="ramais-grid">
-                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome"></div>
-                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="codLoja"></div>
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome" required></div>
+                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="codLoja" required></div>
             </div>
-            <div class="form-group"><label>Telefone:</label><input type="text" id="telefone1"></div>
-            <div class="form-group"><label>Descrição do Problema:</label><textarea id="problemaRelatado"></textarea></div>
-            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="procedimentoRealizado"></textarea></div>
+
+            <div class="ramais-grid">
+                <div class="form-group"><label>Telefone 1:</label><input type="text" id="tel1" required></div>
+                <div class="form-group"><label>Telefone 2:</label><input type="text" id="tel2"></div>
+            </div>
+
+            <div class="form-group"><label>E-mail:</label><input type="email" id="email_atend"></div>
+
+            <div class="form-group">
+                <label>Localização:</label>
+                <select id="local_atend">
+                    <option value="PDV">Frente de Caixa (PDV)</option>
+                    <option value="Escritorio">Escritório / Administrativo</option>
+                    <option value="CD">CD</option>
+                    <option value="RM">RM</option>
+                    <option value="Loja">Loja</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Categoria:</label>
+                <select id="cat_atend" onchange="toggleEquip()">
+                    <option value="Sistema">Sistema (Software)</option>
+                    <option value="Equipamento">Equipamento (Hardware)</option>
+                </select>
+            </div>
+
+            <div id="equipment-fields">
+                <div class="form-group">
+                    <label>Equipamento:</label>
+                    <select id="equip_tipo">
+                        <option value="Computador">Computador / Notebook</option>
+                        <option value="Impressora">Impressora</option>
+                        <option value="Pinpad">Pinpad</option>
+                        <option value="Balança">Balança</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Patrimônio:</label><input type="text" id="patrimonio"></div>
+            </div>
+
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_atend" required></textarea></div>
+            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="proc_atend" required></textarea></div>
             
             <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="copiarMascara()">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="gerarRelatorioTxt()">Exportar</button>
+                <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">Exportar</button>
                 <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar</button>
             </div>
-            <div id="feedback" class="status-msg"></div>
+            <div id="status-atendimento" class="status-msg"></div>
         </form>
     </div>
 </div>
 
 <script>
-    // --- LÓGICA DE NAVEGAÇÃO ---
+    // NAVEGAÇÃO
     function switchForm(formId, btn) {
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -194,22 +233,20 @@
     function limpar(formId) {
         if(confirm("Deseja limpar todos os campos?")) {
             document.getElementById(formId).reset();
-            if(formId === 'registroForm') setDate();
+            if(formId === 'registroForm') { setDate(); toggleEquip(); checkFCR(); }
         }
     }
 
-    // --- FUNÇÕES MÁSCARA 1 (BALANÇA) ---
+    // BALANÇA
     function copiarTexto(tipo) {
-        const data = new Date().toLocaleString('pt-BR');
-        const texto = `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
+        const texto = `--- CARGA BALANÇA ---\nData: ${new Date().toLocaleString()}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
         navigator.clipboard.writeText(texto);
         document.getElementById('status-balanca').innerText = "Copiado!";
         setTimeout(() => document.getElementById('status-balanca').innerText = "", 2000);
     }
 
     function exportarTXT(tipo) {
-        const data = new Date().toLocaleString('pt-BR');
-        const texto = `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
+        const texto = `--- CARGA BALANÇA ---\nData: ${new Date().toLocaleString()}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
         const blob = new Blob([texto], { type: 'text/plain' });
         const link = document.createElement('a');
         link.download = `carga_balanca.txt`;
@@ -217,14 +254,12 @@
         link.click();
     }
 
-    // --- FUNÇÕES MÁSCARA 2 (CONTATO) ---
+    // CONTATO
     function processarContato(acao) {
         const chamado = document.getElementById('chamado').value;
         const r1 = document.getElementById('ramal1').value;
         if (!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
-        
-        const texto = `--- TENTATIVA DE CONTATO ---\nData: ${new Date().toLocaleString()}\nChamado: ${chamado}\nRamais: ${r1}\nStatus: Sem êxito.`;
-        
+        const texto = `--- TENTATIVA DE CONTATO ---\nData: ${new Date().toLocaleString()}\nChamado: ${chamado}\nDestinatário: ${document.getElementById('destinatario').value}\nRamais: ${r1}\nStatus: Sem êxito.`;
         if(acao === 'copy') {
             navigator.clipboard.writeText(texto);
             document.getElementById('status-contato').innerText = "Copiado!";
@@ -235,35 +270,67 @@
             link.href = URL.createObjectURL(blob);
             link.click();
         }
+        setTimeout(() => document.getElementById('status-contato').innerText = "", 2000);
     }
 
-    // --- FUNÇÕES MÁSCARA 3 (ATENDIMENTO) ---
+    // ATENDIMENTO (MÁSCARA COMPLETA)
     function setDate() {
-        const now = new Date();
-        document.getElementById('dataAtendimento').value = now.toLocaleString('pt-BR');
+        document.getElementById('dataAtendimento').value = new Date().toLocaleString('pt-BR');
+    }
+
+    function toggleEquip() {
+        const isEquip = document.getElementById('cat_atend').value === "Equipamento";
+        document.getElementById('equipment-fields').style.display = isEquip ? 'block' : 'none';
     }
 
     function checkFCR() {
         const isFcr = document.getElementById('tipoAtendimento').value.includes("FCR");
-        document.getElementById('procedimentoRealizado').classList.toggle('fcr-highlight', isFcr);
+        document.getElementById('proc_atend').classList.toggle('fcr-highlight', isFcr);
     }
 
-    function copiarMascara() {
-        const texto = `PROBLEMA: ${document.getElementById('problemaRelatado').value}\nPROCEDIMENTO: ${document.getElementById('procedimentoRealizado').value}\nCONTATO: ${document.getElementById('nome').value}`;
-        navigator.clipboard.writeText(texto);
-        document.getElementById('feedback').innerText = "Copiado!";
+    function processarAtendimento(acao) {
+        const prob = document.getElementById('prob_atend').value;
+        const proc = document.getElementById('proc_atend').value;
+        const nome = document.getElementById('nome').value;
+        const loja = document.getElementById('codLoja').value;
+
+        if(!prob || !proc || !nome || !loja) { alert("Preencha os campos obrigatórios!"); return; }
+
+        let equipText = "";
+        if(document.getElementById('cat_atend').value === "Equipamento") {
+            equipText = `Equipamento: ${document.getElementById('equip_tipo').value}\nPatrimônio: ${document.getElementById('patrimonio').value || 'N/I'}\n`;
+        }
+
+        const textoFinal = `==================================\n` +
+            `PROBLEMA RELATADO:\n${prob}\n\n` +
+            `PROCEDIMENTO REALIZADO:\n${proc}\n` +
+            `==================================\n` +
+            `--- INFORMAÇÕES DE CONTATO ---\n` +
+            `Data: ${document.getElementById('dataAtendimento').value}\n` +
+            `Tipo: ${document.getElementById('tipoAtendimento').value}\n` +
+            `Solicitante: ${nome}\n` +
+            `Loja/Setor: ${loja}\n` +
+            `Telefone: ${document.getElementById('tel1').value} / ${document.getElementById('tel2').value}\n` +
+            `E-mail: ${document.getElementById('email_atend').value || 'Não informado'}\n` +
+            `Local: ${document.getElementById('local_atend').value}\n` +
+            `Categoria: ${document.getElementById('cat_atend').value}\n` +
+            equipText +
+            `==================================`;
+
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(textoFinal);
+            document.getElementById('status-atendimento').innerText = "Copiado!";
+        } else {
+            const blob = new Blob([textoFinal], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.download = `atendimento_${loja}.txt`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+        setTimeout(() => document.getElementById('status-atendimento').innerText = "", 2000);
     }
 
-    function gerarRelatorioTxt() {
-        const texto = `ATENDIMENTO\nSolicitante: ${document.getElementById('nome').value}`;
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `atendimento.txt`;
-        a.click();
-    }
-
-    window.onload = setDate;
+    window.onload = () => { setDate(); toggleEquip(); };
 </script>
 
 </body>
