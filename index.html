@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Suporte TI</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
+        .nav-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        
+        /* Botões de Alternância */
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #dcdde1;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .nav-btn.active { background: var(--accent); color: white; }
+
+        .form-content { display: none; animation: fadeIn 0.4s; }
+        .form-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Estilos Reutilizáveis dos Formulários */
+        .container { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin: 0 auto; }
+        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        button.action-btn { padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-copy { background: #3498db; }
+        .btn-export { background: #27ae60; }
+        .btn-clear { background: #e74c3c; grid-column: span 2; }
+        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+<div class="nav-container">
+    <button class="nav-btn active" onclick="switchForm('balanca', this)">Carga Balança</button>
+    <button class="nav-btn" onclick="switchForm('mask2', this)">Máscara 2</button>
+    <button class="nav-btn" onclick="switchForm('mask3', this)">Máscara 3</button>
+</div>
+
+<div id="balanca" class="form-content active">
+    <div class="container">
+        <h2>Registro de Carga</h2>
+        <form id="formBalanca">
+            <div class="form-group"><label>Loja:</label><input type="text" id="loja"></div>
+            <div class="form-group"><label>Contato:</label><input type="text" id="contato"></div>
+            <div class="form-group"><label>Balança:</label><input type="text" id="balanca_id"></div>
+            <div class="form-group">
+                <label>Departamento:</label>
+                <select id="depto">
+                    <option value="Açougue">Açougue</option>
+                    <option value="Padaria">Padaria</option>
+                    <option value="Hortifruti">Hortifruti</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Motivo:</label><textarea id="motivo"></textarea></div>
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-copy" onclick="copiarTexto('balanca')">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="exportarTXT('balanca')">Exportar</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('formBalanca')">Limpar</button>
+            </div>
+            <div id="status-balanca" class="status-msg"></div>
+        </form>
+    </div>
+</div>
+
+<div id="mask2" class="form-content">
+    <div class="container">
+        <h2>Máscara de Atendimento 2</h2>
+        <form id="form2">
+            <p style="text-align:center">Insira aqui os campos da sua segunda máscara.</p>
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-clear" onclick="limpar('form2')">Limpar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="mask3" class="form-content">
+    <div class="container">
+        <h2>Máscara de Atendimento 3</h2>
+        <form id="form3">
+            <p style="text-align:center">Insira aqui os campos da sua terceira máscara.</p>
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-clear" onclick="limpar('form3')">Limpar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function switchForm(formId, btn) {
+        // Esconde todos
+        document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        // Mostra o selecionado
+        document.getElementById(formId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function formatarBalanca() {
+        const data = new Date().toLocaleString('pt-BR');
+        return `--- CARGA BALANÇA ---\nData: ${data}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
+    }
+
+    function copiarTexto(tipo) {
+        let texto = "";
+        if(tipo === 'balanca') texto = formatarBalanca();
+        // Adicione os ifs para as outras máscaras aqui
+        
+        navigator.clipboard.writeText(texto).then(() => {
+            document.getElementById(`status-${tipo}`).innerText = "Copiado!";
+            setTimeout(() => { document.getElementById(`status-${tipo}`).innerText = ""; }, 2000);
+        });
+    }
+
+    function exportarTXT(tipo) {
+        let texto = formatarBalanca();
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.download = `registro_${tipo}.txt`;
+        link.href = window.URL.createObjectURL(blob);
+        link.click();
+    }
+
+    function limpar(formId) {
+        if(confirm("Limpar campos?")) document.getElementById(formId).reset();
+    }
+</script>
+
+</body>
+</html>
