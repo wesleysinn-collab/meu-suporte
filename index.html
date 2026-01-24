@@ -221,7 +221,325 @@ Status: Loja não atendeu às tentativas de contato telefônico.`;
     <div class="container">
         <h2>Máscara de Atendimento 3</h2>
         <form id="form3">
-            <p style="text-align:center">Insira aqui os campos da sua terceira máscara.</p>
+            <p style="text-align:center">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Atendimento</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f2f5; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container { 
+            background: #fff; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); 
+            width: 100%;
+            max-width: 700px;
+            box-sizing: border-box;
+        }
+
+        .brand-header {
+            text-align: center;
+            color: #1a3a5a; 
+            margin-bottom: 5px;
+            font-size: 2em;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            text-align: center;
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: 400;
+        }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        
+        input[type="text"], input[type="email"], select { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid #ccd0d5; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 15px;
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 110px; 
+            padding: 12px; 
+            border: 1px solid #ccd0d5; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            background-color: #fdfdfd; 
+            margin-bottom: 20px; 
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        #copiarTextoBtn { background-color: #007bff; color: white; flex: 2; }
+        #copiarTextoBtn:hover { background-color: #0056b3; }
+
+        #downloadTxtBtn { background-color: #28a745; color: white; flex: 1; }
+        #downloadTxtBtn:hover { background-color: #218838; }
+        
+        #resetBtn { 
+            background-color: #dc3545; 
+            color: white; 
+            width: 100%; 
+            margin-top: 5px;
+        }
+        #resetBtn:hover { background-color: #c82333; }
+
+        #feedback { 
+            margin-top: 20px; 
+            font-weight: 600; 
+            text-align: center; 
+            min-height: 20px;
+        }
+
+        .fcr-highlight { 
+            border: 2px solid #28a745 !important; 
+            background-color: #f0fff4 !important; 
+        }
+
+        #dataAtendimento { background-color: #e9ecef; color: #495057; cursor: not-allowed; }
+        
+        #equipment-fields { display: none; }
+
+        @media (max-width: 600px) {
+            .action-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    
+    <h1 class="brand-header">MÁSCARA DE ATENDIMENTO</h1>
+    <h2>Registro Rápido de Contato</h2>
+
+    <div class="container">
+        <form id="registroForm" onsubmit="return false;"> 
+            
+            <label for="dataAtendimento">Data e Hora do Atendimento:</label>
+            <input type="text" id="dataAtendimento" readonly>
+
+            <label for="tipoAtendimento">Tipo de Atendimento:</label>
+            <select id="tipoAtendimento" onchange="checkFCR()">
+                <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
+                <option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option>
+            </select>
+
+            <label for="nome">Nome do Solicitante:</label>
+            <input type="text" id="nome" placeholder="Nome Completo" required>
+
+            <label for="codLoja">Código da Loja ou Setor:</label>
+            <input type="text" id="codLoja" placeholder="Ex: 010 ou RH" required>
+
+            <label for="telefone1">Telefone Principal:</label>
+            <input type="text" id="telefone1" placeholder="(00) 00000-0000" required>
+            
+            <label for="telefone2">Telefone Secundário (Opcional):</label>
+            <input type="text" id="telefone2" placeholder="(00) 00000-0000">
+
+            <label for="email">E-mail de Contato:</label>
+            <input type="email" id="email" placeholder="email@exemplo.com">
+
+            <label for="local">Localização do Problema:</label>
+            <select id="local">
+                <option value="PDV">Frente de Caixa (PDV)</option>
+                <option value="Escritorio">Escritório / Administrativo</option>
+                <option value="Estoque">Estoque / Depósito</option>
+                <option value="Outros">Outros</option>
+            </select>
+
+            <label for="tipoProblema">Categoria:</label>
+            <select id="tipoProblema" onchange="toggleFields()">
+                <option value="Sistema">Problema de Sistema (Software)</option>
+                <option value="Equipamento">Problema de Equipamento (Hardware)</option>
+            </select>
+            
+            <div id="equipment-fields">
+                <label for="equipamento">Equipamento Específico:</label>
+                <select id="equipamento">
+                    <option value="Computador">Computador / Notebook</option>
+                    <option value="Impressora">Impressora</option>
+                    <option value="Pinpad">Pinpad</option>
+                    <option value="Balança">Balança</option>
+                    <option value="Leitor">Leitor de Código</option>
+                    <option value="Outro">Outro</option>
+                </select>
+
+                <label for="nPatrimonio">Nº Patrimônio / Série:</label>
+                <input type="text" id="nPatrimonio" placeholder="Etiqueta de patrimônio">
+            </div>
+
+            <label for="problemaRelatado">O que foi relatado pelo usuário?</label>
+            <textarea id="problemaRelatado" placeholder="Descreva brevemente a falha..." required></textarea>
+            
+            <label for="procedimentoRealizado">O que você fez para resolver?</label>
+            <textarea id="procedimentoRealizado" placeholder="Descreva os testes e a solução..." required></textarea>
+            
+            <div class="action-buttons">
+                <button id="copiarTextoBtn" onclick="copiarMascara()">Copiar para Clipboard</button>
+                <button id="downloadTxtBtn" onclick="gerarRelatorioTxt()">Baixar .TXT</button>
+            </div>
+        </form>
+        
+        <button id="resetBtn" onclick="resetForm()">Limpar Tudo</button>
+        
+        <p id="feedback"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('registroForm');
+        const procedimentoRealizado = document.getElementById('procedimentoRealizado');
+        const equipmentFields = document.getElementById('equipment-fields');
+        const feedback = document.getElementById('feedback');
+        
+        function setDate() {
+            const now = new Date();
+            const format = (val) => String(val).padStart(2, '0');
+            const dataStr = `${format(now.getDate())}/${format(now.getMonth()+1)}/${now.getFullYear()} ${format(now.getHours())}:${format(now.getMinutes())}`;
+            document.getElementById('dataAtendimento').value = dataStr;
+        }
+
+        window.onload = () => { setDate(); toggleFields(); }
+
+        function toggleFields() {
+            const isEquip = document.getElementById('tipoProblema').value === "Equipamento";
+            equipmentFields.style.display = isEquip ? 'block' : 'none';
+        }
+
+        function checkFCR() {
+            const isFcr = document.getElementById('tipoAtendimento').value.includes("FCR");
+            procedimentoRealizado.classList.toggle('fcr-highlight', isFcr);
+        }
+
+        function resetForm() {
+            if (confirm("Deseja apagar todos os dados informados?")) {
+                form.reset();
+                setDate();
+                toggleFields();
+                checkFCR();
+                feedback.style.color = "green";
+                feedback.textContent = "✅ Formulário reiniciado.";
+                setTimeout(() => feedback.textContent = "", 3000);
+            }
+        }
+
+        function getMascaraTexto() {
+            const campos = {
+                data: document.getElementById('dataAtendimento').value,
+                tipo: document.getElementById('tipoAtendimento').value,
+                nome: document.getElementById('nome').value,
+                loja: document.getElementById('codLoja').value,
+                tel1: document.getElementById('telefone1').value,
+                tel2: document.getElementById('telefone2').value,
+                email: document.getElementById('email').value || 'Não informado',
+                local: document.getElementById('local').value,
+                cat: document.getElementById('tipoProblema').value,
+                prob: document.getElementById('problemaRelatado').value,
+                proc: document.getElementById('procedimentoRealizado').value
+            };
+
+            if(!campos.nome || !campos.loja || !campos.prob || !campos.proc) {
+                feedback.style.color = "red";
+                feedback.textContent = "⚠️ Preencha os campos obrigatórios!";
+                return null;
+            }
+
+            let equipInfo = "";
+            if(campos.cat === "Equipamento") {
+                equipInfo = `Equipamento: ${document.getElementById('equipamento').value}\nPatrimônio: ${document.getElementById('nPatrimonio').value || 'N/I'}\n`;
+            }
+
+            // MÁSCARA SEM O TÍTULO INICIAL E COM ORDEM INVERTIDA
+            return `==================================\n` +
+                   `PROBLEMA RELATADO:\n` +
+                   `${campos.prob}\n\n` +
+                   `PROCEDIMENTO REALIZADO:\n` +
+                   `${campos.proc}\n` +
+                   `==================================\n` +
+                   `--- INFORMAÇÕES DE CONTATO ---\n` +
+                   `Data/Hora: ${campos.data}\n` +
+                   `Tipo: ${campos.tipo}\n` +
+                   `Solicitante: ${campos.nome}\n` +
+                   `Loja/Setor: ${campos.loja}\n` +
+                   `Telefone: ${campos.tel1} ${campos.tel2 ? '/ ' + campos.tel2 : ''}\n` +
+                   `E-mail: ${campos.email}\n` +
+                   `Local: ${campos.local}\n` +
+                   `Categoria: ${campos.cat}\n` +
+                   equipInfo +
+                   `==================================`;
+        }
+
+        function copiarMascara() {
+            const texto = getMascaraTexto();
+            if(!texto) return;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                feedback.style.color = "#007bff";
+                feedback.textContent = "✅ Copiado com sucesso!";
+                setTimeout(() => feedback.textContent = "", 3000);
+            });
+        }
+
+        function gerarRelatorioTxt() {
+            const texto = getMascaraTexto();
+            if(!texto) return;
+
+            const blob = new Blob([texto], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const nomeArquivo = document.getElementById('codLoja').value + "_" + document.getElementById('nome').value.replace(/\s/g, '_');
+            
+            a.href = url;
+            a.download = `Atendimento_${nomeArquivo}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            feedback.style.color = "#28a745";
+            feedback.textContent = "💾 Arquivo baixado!";
+            setTimeout(() => feedback.textContent = "", 3000);
+        }
+    </script>
+</body>
+</html>
+                
+            </p>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-clear" onclick="limpar('form3')">Limpar</button>
             </div>
