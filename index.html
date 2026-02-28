@@ -166,9 +166,9 @@
             </div>
             <div class="grid-2">
                 <div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div>
-            
+                <div class="form-group"><label>Telefone 2:</label><input type="text" id="atend_tel2"></div>
             </div>
-           
+            <div class="form-group"><label>E-mail:</label><input type="text" id="atend_email"></div>
             <div class="form-group">
                 <label>Categoria:</label>
                 <select id="cat_atend" onchange="toggleEquip()">
@@ -268,19 +268,18 @@
         const texto = `DATA/HORA: ${new Date().toLocaleString('pt-BR')}
 TIPO: ${document.getElementById('tipo_cx').value}
 -----------------------------------
-
+SOLICITANTE: ${document.getElementById('sol_cx').value}
+LOJA: ${document.getElementById('loja_cx').value}
+TELEFONE: ${document.getElementById('tel_cx').value}
+CAIXA Nº: ${document.getElementById('num_cx').value}
+-----------------------------------
 PROBLEMA RELATADO:
 ${document.getElementById('prob_cx').value}
 
 PROCEDIMENTO EXECUTADO:
 ${document.getElementById('proc_cx').value}
 -----------------------------------`;
-SOLICITANTE: ${document.getElementById('sol_cx').value}
-LOJA: ${document.getElementById('loja_cx').value}
-TELEFONE: ${document.getElementById('tel_cx').value}
-CAIXA Nº: ${document.getElementById('num_cx').value}
------------------------------------
-    
+
         if(acao === 'copy') {
             navigator.clipboard.writeText(texto);
             showStatus('status-caixa', 'Copiado!');
