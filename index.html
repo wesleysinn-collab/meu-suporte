@@ -268,16 +268,17 @@
         const texto = `DATA/HORA: ${new Date().toLocaleString('pt-BR')}
 TIPO: ${document.getElementById('tipo_cx').value}
 -----------------------------------
-SOLICITANTE: ${document.getElementById('sol_cx').value}
-LOJA: ${document.getElementById('loja_cx').value}
-TELEFONE: ${document.getElementById('tel_cx').value}
-CAIXA Nº: ${document.getElementById('num_cx').value}
------------------------------------
 PROBLEMA RELATADO:
 ${document.getElementById('prob_cx').value}
 
 PROCEDIMENTO EXECUTADO:
 ${document.getElementById('proc_cx').value}
+-----------------------------------
+
+SOLICITANTE: ${document.getElementById('sol_cx').value}
+LOJA: ${document.getElementById('loja_cx').value}
+TELEFONE: ${document.getElementById('tel_cx').value}
+CAIXA Nº: ${document.getElementById('num_cx').value}
 -----------------------------------`;
 
         if(acao === 'copy') {
