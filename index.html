@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Suporte TI - Unificado</title>
+    <title>Portal de Suporte TI - Oficial</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -15,7 +15,6 @@
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
         
-        /* Navegação */
         .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             padding: 10px 15px;
@@ -29,12 +28,10 @@
         }
         .nav-btn.active { background: var(--accent); color: white; }
 
-        /* Containers de Conteúdo */
         .form-content { display: none; animation: fadeIn 0.4s; }
         .form-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* PADRONIZAÇÃO DE LARGURA */
         .container { 
             background: #fff; 
             padding: 25px; 
@@ -120,21 +117,12 @@
     <div class="container">
         <h2>Registro de Contato</h2>
         <form id="form2">
-            <div class="form-group">
-                <label>Número do Chamado <span class="required">*</span></label>
-                <input type="text" id="chamado_cont" placeholder="Ex: 123456">
-            </div>
-            <div class="form-group">
-                <label>Preciso falar com:</label>
-                <input type="text" id="destinatario_cont" placeholder="Ex: Gerente">
-            </div>
-            <div class="form-group">
-                <label>Ramais Utilizados <span class="required">*</span></label>
+            <div class="form-group"><label>Número do Chamado <span class="required">*</span></label><input type="text" id="chamado_cont"></div>
+            <div class="form-group"><label>Preciso falar com:</label><input type="text" id="destinatario_cont"></div>
+            <div class="form-group"><label>Ramais Utilizados:</label>
                 <div class="grid-2">
-                    <input type="text" id="ram1" placeholder="Ramal 1">
-                    <input type="text" id="ram2" placeholder="Ramal 2">
-                    <input type="text" id="ram3" placeholder="Ramal 3">
-                    <input type="text" id="ram4" placeholder="Ramal 4">
+                    <input type="text" id="ram1" placeholder="R1"><input type="text" id="ram2" placeholder="R2">
+                    <input type="text" id="ram3" placeholder="R3"><input type="text" id="ram4" placeholder="R4">
                 </div>
             </div>
             <div class="btn-group">
@@ -152,33 +140,12 @@
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
             <div class="form-group"><label>Data e Hora:</label><input type="text" id="dataAtend" readonly style="background:#eee"></div>
-            <div class="form-group">
-                <label>Tipo:</label>
-                <select id="tipoAtend" onchange="checkFCR()">
-                    <option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option>
-                    <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
-                </select>
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div>
-                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div>
-                <div class="form-group"><label>Telefone 2:</label><input type="text" id="atend_tel2"></div>
-            </div>
+            <div class="form-group"><label>Tipo:</label><select id="tipoAtend" onchange="checkFCR()"><option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option><option value="CHAMADO ABERTO">CHAMADO ABERTO</option></select></div>
+            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div><div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div></div>
+            <div class="grid-2"><div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div><div class="form-group"><label>Telefone 2:</label><input type="text" id="atend_tel2"></div></div>
             <div class="form-group"><label>E-mail:</label><input type="text" id="atend_email"></div>
-            <div class="form-group">
-                <label>Categoria:</label>
-                <select id="cat_atend" onchange="toggleEquip()">
-                    <option value="Sistema">Sistema (Software)</option>
-                    <option value="Equipamento">Equipamento (Hardware)</option>
-                </select>
-            </div>
-            <div id="equipment-fields">
-                <div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div>
-                <div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat"></div>
-            </div>
+            <div class="form-group"><label>Categoria:</label><select id="cat_atend" onchange="toggleEquip()"><option value="Sistema">Sistema (Software)</option><option value="Equipamento">Equipamento (Hardware)</option></select></div>
+            <div id="equipment-fields"><div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div><div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat"></div></div>
             <div class="form-group"><label>Problema Relatado:</label><textarea id="atend_prob"></textarea></div>
             <div class="form-group"><label>Procedimento Realizado:</label><textarea id="atend_proc"></textarea></div>
             <div class="btn-group">
@@ -195,18 +162,9 @@
     <div class="container">
         <h2>Atendimento de Caixa</h2>
         <form id="formCaixa">
-            <div class="form-group">
-                <label>Tipo:</label>
-                <input type="text" id="tipo_cx" value="Resolvido" readonly style="background:#eee">
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx" placeholder="Nome"></div>
-                <div class="form-group"><label>Loja:</label><input type="text" id="loja_cx" placeholder="Loja"></div>
-            </div>
-            <div class="grid-2">
-                <div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx" placeholder="(00) 00000-0000"></div>
-                <div class="form-group"><label>Caixa Nº:</label><input type="text" id="num_cx" placeholder="Ex: 05"></div>
-            </div>
+            <div class="form-group"><label>Tipo:</label><input type="text" id="tipo_cx" value="Resolvido" readonly style="background:#eee"></div>
+            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx"></div><div class="form-group"><label>Loja:</label><input type="text" id="loja_cx"></div></div>
+            <div class="grid-2"><div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx"></div><div class="form-group"><label>Caixa Nº:</label><input type="text" id="num_cx"></div></div>
             <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_cx"></textarea></div>
             <div class="form-group"><label>Procedimento Executado:</label><textarea id="proc_cx"></textarea></div>
             <div class="btn-group">
@@ -220,7 +178,7 @@
 </div>
 
 <script>
-    // NAVEGAÇÃO
+    // FUNÇÕES DE SUPORTE
     function switchForm(id, btn) {
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -230,7 +188,7 @@
     }
 
     function limpar(id) {
-        if(confirm("Limpar todos os campos?")) {
+        if(confirm("Limpar campos?")) {
             document.getElementById(id).reset();
             if(id === 'registroForm') { setAtendData(); toggleEquip(); checkFCR(); }
         }
@@ -239,45 +197,60 @@
     function showStatus(id, msg) {
         const el = document.getElementById(id);
         el.innerText = msg;
-        setTimeout(() => el.innerText = '', 2000);
+        setTimeout(() => el.innerText = '', 2500);
+    }
+
+    function fazerDownload(nomeArquivo, texto) {
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = nomeArquivo;
+        link.click();
+        URL.revokeObjectURL(link.href);
     }
 
     // 1. CARGA BALANÇA
     function processarBalanca(acao) {
         const texto = `--- CARGA BALANÇA ---\nDATA: ${new Date().toLocaleString()}\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nBALANÇA: ${document.getElementById('balanca_id').value}\nDEPTO: ${document.getElementById('depto_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-balanca', 'Copiado!');
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-balanca', 'Copiado para Área de Transferência!');
+        } else {
+            fazerDownload(`carga_loja_${document.getElementById('loja_bal').value || 'ti'}.txt`, texto);
+            showStatus('status-balanca', 'Arquivo Exportado!');
+        }
     }
 
-    // 2. TENTATIVA DE CONTATO (CORRIGIDO: TODOS OS RAMAIS)
+    // 2. TENTATIVA CONTATO
     function processarContato(acao) {
         const chamado = document.getElementById('chamado_cont').value;
         const r1 = document.getElementById('ram1').value.trim();
         const r2 = document.getElementById('ram2').value.trim();
         const r3 = document.getElementById('ram3').value.trim();
         const r4 = document.getElementById('ram4').value.trim();
-
         const ramais = [r1, r2, r3, r4].filter(r => r !== "").join(", ");
 
-        if(!chamado || !r1) { alert("Preencha o chamado e pelo menos o Ramal 1"); return; }
+        if(!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
 
-        const texto = `--- TENTATIVA DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nCHAMADO: ${chamado}\nDESTINATÁRIO: ${document.getElementById('destinatario_cont').value || 'Não informado'}\nRAMAIS: ${ramais}\nSTATUS: Sem êxito telefônico.\n-----------------------------`;
+        const texto = `--- TENTATIVA DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nCHAMADO: ${chamado}\nDESTINATÁRIO: ${document.getElementById('destinatario_cont').value || 'Não informado'}\nRAMAIS: ${ramais}\nSTATUS: Sem êxito telefônico.`;
         
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-contato', 'Sucesso!');
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-contato', 'Copiado!');
+        } else {
+            fazerDownload(`contato_chamado_${chamado}.txt`, texto);
+            showStatus('status-contato', 'Arquivo Gerado!');
+        }
     }
 
-    // 3. REGISTRO ATENDIMENTO (CORRIGIDO: ORDEM E TODOS OS CAMPOS)
+    // 3. REGISTRO ATENDIMENTO
     function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
     function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
     function checkFCR() { document.getElementById('atend_proc').classList.toggle('fcr-highlight', document.getElementById('tipoAtend').value.includes('FCR')); }
     
     function processarAtendimento(acao) {
         const cat = document.getElementById('cat_atend').value;
-        let infoEq = "";
-        if(cat === 'Equipamento') {
-            infoEq = `EQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}\n`;
-        }
+        let infoEq = (cat === 'Equipamento') ? `EQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}\n` : "";
 
         const texto = `==================================
 PROBLEMA RELATADO:
@@ -296,12 +269,18 @@ E-MAIL: ${document.getElementById('atend_email').value || 'Não informado'}
 CATEGORIA: ${cat}
 ${infoEq}==================================`;
 
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-atend', 'Copiado!');
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-atend', 'Copiado!');
+        } else {
+            fazerDownload(`atendimento_${document.getElementById('loja_atend').value || 'ti'}.txt`, texto);
+            showStatus('status-atend', 'Arquivo Gerado!');
+        }
     }
 
-    // 4. ATENDIMENTO DE CAIXA (CORRIGIDO: ORDEM)
+    // 4. ATENDIMENTO DE CAIXA
     function processarCaixa(acao) {
+        const loja = document.getElementById('loja_cx').value;
         const texto = `==================================
 PROBLEMA RELATADO:
 ${document.getElementById('prob_cx').value}
@@ -313,13 +292,18 @@ ${document.getElementById('proc_cx').value}
 DATA/HORA: ${new Date().toLocaleString()}
 TIPO: ${document.getElementById('tipo_cx').value}
 SOLICITANTE: ${document.getElementById('sol_cx').value}
-LOJA: ${document.getElementById('loja_cx').value}
+LOJA: ${loja}
 TELEFONE: ${document.getElementById('tel_cx').value}
 CAIXA Nº: ${document.getElementById('num_cx').value}
 ==================================`;
 
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-caixa', 'Copiado!');
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-caixa', 'Copiado!');
+        } else {
+            fazerDownload(`caixa_loja_${loja || 'ti'}.txt`, texto);
+            showStatus('status-caixa', 'Arquivo Gerado!');
+        }
     }
 
     window.onload = setAtendData;
