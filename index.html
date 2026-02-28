@@ -246,10 +246,49 @@
 
     // LÓGICA CONTATO
     function processarContato(acao) {
-        const cham = document.getElementById('chamado_cont').value;
-        const texto = `--- TENTATIVA DE CONTATO ---\nChamado: ${cham}\nDestinatário: ${document.getElementById('destinatario_cont').value}\nStatus: Sem êxito.`;
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-contato', 'Sucesso!');
+    // Captura dos valores básicos
+    const chamado = document.getElementById('chamado_cont').value;
+    const destinatario = document.getElementById('destinatario_cont').value;
+    const dataHora = new Date().toLocaleString('pt-BR');
+
+    // Lógica para capturar TODOS os ramais preenchidos
+    const r1 = document.getElementById('ram1').value.trim();
+    const r2 = document.getElementById('ram2').value.trim();
+    const r3 = document.getElementById('ram3').value.trim();
+    const r4 = document.getElementById('ram4').value.trim();
+
+    // Filtra apenas os que possuem conteúdo e junta com vírgula
+    const ramaisDigitados = [r1, r2, r3, r4].filter(ramal => ramal !== "").join(", ");
+
+    // Validação mínima
+    if (!chamado || !r1) { 
+        alert("Erro: Preencha pelo menos o número do chamado e o Ramal 1."); 
+        return; 
+    }
+
+    // Montagem do texto (Mantendo o padrão de Problema/Status primeiro se preferir)
+    const texto = `--- TENTATIVA DE CONTATO SEM ÊXITO ---
+DATA/HORA: ${dataHora}
+CHAMADO: ${chamado}
+SOLICITADO FALAR COM: ${destinatario || "Não informado"}
+RAMAIS DISCADOS: ${ramaisDigitados}
+STATUS: Loja não atendeu às tentativas de contato telefônico.
+-----------------------------------`;
+
+    // Execução da ação
+    if (acao === 'copy') {
+        navigator.clipboard.writeText(texto).then(() => {
+            showStatus('status-contato', 'Copiado com sucesso!');
+        });
+    } else {
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.download = `tentativa_contato_${chamado}.txt`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        showStatus('status-contato', 'Exportado!');
+    }
+}
     }
 
     // LÓGICA ATENDIMENTO
