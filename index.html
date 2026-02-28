@@ -309,35 +309,48 @@ ${infoEquipamento}==================================`;
 
     // LÓGICA CAIXA (NOVA MÁSCARA)
     function processarCaixa(acao) {
-        const texto = `DATA/HORA: ${new Date().toLocaleString('pt-BR')}
+    // Captura dos valores
+    const dataHora = new Date().toLocaleString('pt-BR');
+    const tipo = document.getElementById('tipo_cx').value;
+    const solicitante = document.getElementById('sol_cx').value;
+    const loja = document.getElementById('loja_cx').value;
+    const telefone = document.getElementById('tel_cx').value;
+    const caixa = document.getElementById('num_cx').value;
+    const problema = document.getElementById('prob_cx').value;
+    const procedimento = document.getElementById('proc_cx').value;
 
------------------------------------
+    // Montagem do texto com Problema e Procedimento no TOPO
+    const texto = `==================================
 PROBLEMA RELATADO:
-${document.getElementById('prob_cx').value}
+${problema}
 
 PROCEDIMENTO EXECUTADO:
-${document.getElementById('proc_cx').value}
------------------------------------
+${procedimento}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${dataHora}
+TIPO: ${tipo}
+SOLICITANTE: ${solicitante}
+LOJA: ${loja}
+TELEFONE: ${telefone}
+CAIXA Nº: ${caixa}
+==================================`;
 
-SOLICITANTE: ${document.getElementById('sol_cx').value}
-LOJA: ${document.getElementById('loja_cx').value}
-TELEFONE: ${document.getElementById('tel_cx').value}
-CAIXA Nº: ${document.getElementById('num_cx').value}
-TIPO: ${document.getElementById('tipo_cx').value}
------------------------------------`;
-
-        if(acao === 'copy') {
-            navigator.clipboard.writeText(texto);
-            showStatus('status-caixa', 'Copiado!');
-        } else {
-            const blob = new Blob([texto], { type: "text/plain" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `atendimento_caixa.txt`;
-            link.click();
-            showStatus('status-caixa', 'Exportado!');
-        }
+    // Execução da ação
+    if (acao === 'copy') {
+        navigator.clipboard.writeText(texto).then(() => {
+            showStatus('status-caixa', 'Copiado com sucesso!');
+        });
+    } else {
+        const blob = new Blob([texto], { type: "text/plain" });
+        const link = document.createElement("a");
+        const nomeArquivo = (loja || "caixa") + "_atendimento.txt";
+        link.href = URL.createObjectURL(blob);
+        link.download = nomeArquivo;
+        link.click();
+        showStatus('status-caixa', 'Arquivo exportado!');
     }
+}
 
     function showStatus(id, msg) {
         const el = document.getElementById(id);
