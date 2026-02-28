@@ -11,10 +11,9 @@
             --bg: #f4f7f6;
             --success: #27ae60;
             --danger: #e74c3c;
-            --warning: #f39c12;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
         
         /* Navegação */
         .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -108,8 +107,8 @@
             </div>
             <div class="form-group"><label>Motivo:</label><textarea id="motivo_bal"></textarea></div>
             <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="copiarBalanca()">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="exportarBalanca()">Exportar</button>
+                <button type="button" class="action-btn btn-copy" onclick="processarBalanca('copy')">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="processarBalanca('export')">Exportar</button>
                 <button type="button" class="action-btn btn-clear" onclick="limpar('formBalanca')">Limpar</button>
             </div>
             <div id="status-balanca" class="status-msg"></div>
@@ -202,7 +201,7 @@
             </div>
             <div class="grid-2">
                 <div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx" placeholder="Nome"></div>
-                <div class="form-group"><label>Loja:</label><input type="text" id="loja_cx" placeholder="Nº Loja"></div>
+                <div class="form-group"><label>Loja:</label><input type="text" id="loja_cx" placeholder="Loja"></div>
             </div>
             <div class="grid-2">
                 <div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx" placeholder="(00) 00000-0000"></div>
@@ -231,170 +230,96 @@
     }
 
     function limpar(id) {
-        if(confirm("Limpar campos?")) {
+        if(confirm("Limpar todos os campos?")) {
             document.getElementById(id).reset();
-            if(id === 'registroForm') setAtendData();
+            if(id === 'registroForm') { setAtendData(); toggleEquip(); checkFCR(); }
         }
     }
-
-    // LÓGICA BALANÇA
-    function copiarBalanca() {
-        const t = `--- CARGA BALANÇA ---\nLoja: ${document.getElementById('loja_bal').value}\nContato: ${document.getElementById('contato_bal').value}\nDepto: ${document.getElementById('depto_bal').value}\nMotivo: ${document.getElementById('motivo_bal').value}`;
-        navigator.clipboard.writeText(t);
-        showStatus('status-balanca', 'Copiado!');
-    }
-
-    // LÓGICA CONTATO
-    function processarContato(acao) {
-    // Captura dos valores básicos
-    const chamado = document.getElementById('chamado_cont').value;
-    const destinatario = document.getElementById('destinatario_cont').value;
-    const dataHora = new Date().toLocaleString('pt-BR');
-
-    // Lógica para capturar TODOS os ramais preenchidos
-    const r1 = document.getElementById('ram1').value.trim();
-    const r2 = document.getElementById('ram2').value.trim();
-    const r3 = document.getElementById('ram3').value.trim();
-    const r4 = document.getElementById('ram4').value.trim();
-
-    // Filtra apenas os que possuem conteúdo e junta com vírgula
-    const ramaisDigitados = [r1, r2, r3, r4].filter(ramal => ramal !== "").join(", ");
-
-    // Validação mínima
-    if (!chamado || !r1) { 
-        alert("Erro: Preencha pelo menos o número do chamado e o Ramal 1."); 
-        return; 
-    }
-
-    // Montagem do texto (Mantendo o padrão de Problema/Status primeiro se preferir)
-    const texto = `--- TENTATIVA DE CONTATO SEM ÊXITO ---
-DATA/HORA: ${dataHora}
-CHAMADO: ${chamado}
-SOLICITADO FALAR COM: ${destinatario || "Não informado"}
-RAMAIS DISCADOS: ${ramaisDigitados}
-STATUS: Loja não atendeu às tentativas de contato telefônico.
------------------------------------`;
-
-    // Execução da ação
-    if (acao === 'copy') {
-        navigator.clipboard.writeText(texto).then(() => {
-            showStatus('status-contato', 'Copiado com sucesso!');
-        });
-    } else {
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.download = `tentativa_contato_${chamado}.txt`;
-        link.href = URL.createObjectURL(blob);
-        link.click();
-        showStatus('status-contato', 'Exportado!');
-    }
-}
-    }
-
-    // LÓGICA ATENDIMENTO
-    function processarAtendimento(acao) {
-    // Captura de todos os valores dos campos
-    const data = document.getElementById('dataAtend').value;
-    const tipo = document.getElementById('tipoAtend').value;
-    const nome = document.getElementById('nome_atend').value;
-    const loja = document.getElementById('loja_atend').value;
-    const tel1 = document.getElementById('atend_tel1').value;
-    const tel2 = document.getElementById('atend_tel2').value;
-    const email = document.getElementById('atend_email').value;
-    const cat = document.getElementById('cat_atend').value;
-    const prob = document.getElementById('atend_prob').value;
-    const proc = document.getElementById('atend_proc').value;
-
-    // Lógica condicional para Equipamento
-    let infoEquipamento = "";
-    if (cat === 'Equipamento') {
-        const eqNome = document.getElementById('eq_nome').value;
-        const eqPat = document.getElementById('eq_pat').value;
-        infoEquipamento = `EQUIPAMENTO: ${eqNome}\nPATRIMÔNIO: ${eqPat}\n`;
-    }
-
-    // Montagem da máscara completa
-    const texto = `==================================
-PROBLEMA RELATADO:
-${prob}
-
-PROCEDIMENTO REALIZADO:
-${proc}
-==================================
---- INFORMAÇÕES DE CONTATO ---
-DATA/HORA: ${data}
-TIPO: ${tipo}
-SOLICITANTE: ${nome}
-LOJA/SETOR: ${loja}
-TELEFONE: ${tel1}${tel2 ? ' / ' + tel2 : ''}
-E-MAIL: ${email || 'Não informado'}
-CATEGORIA: ${cat}
-${infoEquipamento}==================================`;
-
-    // Execução da ação (Copiar ou Exportar)
-    if (acao === 'copy') {
-        navigator.clipboard.writeText(texto).then(() => {
-            showStatus('status-atend', 'Copiado com sucesso!');
-        });
-    } else {
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.download = `atendimento_${loja || 'ti'}.txt`;
-        link.href = URL.createObjectURL(blob);
-        link.click();
-        showStatus('status-atend', 'Arquivo gerado!');
-    }
-}
-
-    // LÓGICA CAIXA (NOVA MÁSCARA)
-    function processarCaixa(acao) {
-    // Captura dos valores
-    const dataHora = new Date().toLocaleString('pt-BR');
-    const tipo = document.getElementById('tipo_cx').value;
-    const solicitante = document.getElementById('sol_cx').value;
-    const loja = document.getElementById('loja_cx').value;
-    const telefone = document.getElementById('tel_cx').value;
-    const caixa = document.getElementById('num_cx').value;
-    const problema = document.getElementById('prob_cx').value;
-    const procedimento = document.getElementById('proc_cx').value;
-
-    // Montagem do texto com Problema e Procedimento no TOPO
-    const texto = `==================================
-PROBLEMA RELATADO:
-${problema}
-
-PROCEDIMENTO EXECUTADO:
-${procedimento}
-==================================
---- INFORMAÇÕES DE CONTATO ---
-DATA/HORA: ${dataHora}
-TIPO: ${tipo}
-SOLICITANTE: ${solicitante}
-LOJA: ${loja}
-TELEFONE: ${telefone}
-CAIXA Nº: ${caixa}
-==================================`;
-
-    // Execução da ação
-    if (acao === 'copy') {
-        navigator.clipboard.writeText(texto).then(() => {
-            showStatus('status-caixa', 'Copiado com sucesso!');
-        });
-    } else {
-        const blob = new Blob([texto], { type: "text/plain" });
-        const link = document.createElement("a");
-        const nomeArquivo = (loja || "caixa") + "_atendimento.txt";
-        link.href = URL.createObjectURL(blob);
-        link.download = nomeArquivo;
-        link.click();
-        showStatus('status-caixa', 'Arquivo exportado!');
-    }
-}
 
     function showStatus(id, msg) {
         const el = document.getElementById(id);
         el.innerText = msg;
         setTimeout(() => el.innerText = '', 2000);
+    }
+
+    // 1. CARGA BALANÇA
+    function processarBalanca(acao) {
+        const texto = `--- CARGA BALANÇA ---\nDATA: ${new Date().toLocaleString()}\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nBALANÇA: ${document.getElementById('balanca_id').value}\nDEPTO: ${document.getElementById('depto_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-balanca', 'Copiado!');
+    }
+
+    // 2. TENTATIVA DE CONTATO (CORRIGIDO: TODOS OS RAMAIS)
+    function processarContato(acao) {
+        const chamado = document.getElementById('chamado_cont').value;
+        const r1 = document.getElementById('ram1').value.trim();
+        const r2 = document.getElementById('ram2').value.trim();
+        const r3 = document.getElementById('ram3').value.trim();
+        const r4 = document.getElementById('ram4').value.trim();
+
+        const ramais = [r1, r2, r3, r4].filter(r => r !== "").join(", ");
+
+        if(!chamado || !r1) { alert("Preencha o chamado e pelo menos o Ramal 1"); return; }
+
+        const texto = `--- TENTATIVA DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nCHAMADO: ${chamado}\nDESTINATÁRIO: ${document.getElementById('destinatario_cont').value || 'Não informado'}\nRAMAIS: ${ramais}\nSTATUS: Sem êxito telefônico.\n-----------------------------`;
+        
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-contato', 'Sucesso!');
+    }
+
+    // 3. REGISTRO ATENDIMENTO (CORRIGIDO: ORDEM E TODOS OS CAMPOS)
+    function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
+    function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
+    function checkFCR() { document.getElementById('atend_proc').classList.toggle('fcr-highlight', document.getElementById('tipoAtend').value.includes('FCR')); }
+    
+    function processarAtendimento(acao) {
+        const cat = document.getElementById('cat_atend').value;
+        let infoEq = "";
+        if(cat === 'Equipamento') {
+            infoEq = `EQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}\n`;
+        }
+
+        const texto = `==================================
+PROBLEMA RELATADO:
+${document.getElementById('atend_prob').value}
+
+PROCEDIMENTO REALIZADO:
+${document.getElementById('atend_proc').value}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${document.getElementById('dataAtend').value}
+TIPO: ${document.getElementById('tipoAtend').value}
+SOLICITANTE: ${document.getElementById('nome_atend').value}
+LOJA/SETOR: ${document.getElementById('loja_atend').value}
+TELEFONE: ${document.getElementById('atend_tel1').value} / ${document.getElementById('atend_tel2').value}
+E-MAIL: ${document.getElementById('atend_email').value || 'Não informado'}
+CATEGORIA: ${cat}
+${infoEq}==================================`;
+
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-atend', 'Copiado!');
+    }
+
+    // 4. ATENDIMENTO DE CAIXA (CORRIGIDO: ORDEM)
+    function processarCaixa(acao) {
+        const texto = `==================================
+PROBLEMA RELATADO:
+${document.getElementById('prob_cx').value}
+
+PROCEDIMENTO EXECUTADO:
+${document.getElementById('proc_cx').value}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${new Date().toLocaleString()}
+TIPO: ${document.getElementById('tipo_cx').value}
+SOLICITANTE: ${document.getElementById('sol_cx').value}
+LOJA: ${document.getElementById('loja_cx').value}
+TELEFONE: ${document.getElementById('tel_cx').value}
+CAIXA Nº: ${document.getElementById('num_cx').value}
+==================================`;
+
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-caixa', 'Copiado!');
     }
 
     window.onload = setAtendData;
