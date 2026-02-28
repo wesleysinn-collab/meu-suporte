@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Suporte TI</title>
+    <title>Portal de Suporte TI - Unificado</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -11,20 +11,22 @@
             --bg: #f4f7f6;
             --success: #27ae60;
             --danger: #e74c3c;
+            --warning: #f39c12;
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
         
         /* Navegação */
-        .nav-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
-            padding: 10px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             background: #dcdde1;
             font-weight: bold;
             transition: 0.3s;
+            font-size: 13px;
         }
         .nav-btn.active { background: var(--accent); color: white; }
 
@@ -60,7 +62,7 @@
 
         textarea { height: 80px; resize: vertical; }
 
-        .ramais-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         
         button.action-btn { 
@@ -85,28 +87,29 @@
     <button class="nav-btn active" onclick="switchForm('balanca', this)">Carga Balança</button>
     <button class="nav-btn" onclick="switchForm('mask2', this)">Tentativa de contato</button>
     <button class="nav-btn" onclick="switchForm('mask3', this)">Registro de atendimento</button>
+    <button class="nav-btn" onclick="switchForm('mask4', this)">Atendimento de Caixa</button>
 </div>
 
 <div id="balanca" class="form-content active">
     <div class="container">
         <h2>Registro de Carga</h2>
         <form id="formBalanca">
-            <div class="form-group"><label>Loja:</label><input type="text" id="loja"></div>
-            <div class="form-group"><label>Contato:</label><input type="text" id="contato"></div>
+            <div class="form-group"><label>Loja:</label><input type="text" id="loja_bal"></div>
+            <div class="form-group"><label>Contato:</label><input type="text" id="contato_bal"></div>
             <div class="form-group"><label>Balança:</label><input type="text" id="balanca_id"></div>
             <div class="form-group">
                 <label>Departamento:</label>
-                <select id="depto">
+                <select id="depto_bal">
                     <option value="Açougue">Açougue</option>
                     <option value="Padaria">Padaria</option>
                     <option value="Hortifruti">Hortifruti</option>
                     <option value="Frios">Frios</option>
                 </select>
             </div>
-            <div class="form-group"><label>Motivo:</label><textarea id="motivo"></textarea></div>
+            <div class="form-group"><label>Motivo:</label><textarea id="motivo_bal"></textarea></div>
             <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="copiarTexto('balanca')">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="exportarTXT('balanca')">Exportar</button>
+                <button type="button" class="action-btn btn-copy" onclick="copiarBalanca()">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="exportarBalanca()">Exportar</button>
                 <button type="button" class="action-btn btn-clear" onclick="limpar('formBalanca')">Limpar</button>
             </div>
             <div id="status-balanca" class="status-msg"></div>
@@ -116,23 +119,23 @@
 
 <div id="mask2" class="form-content">
     <div class="container">
-        <h2>Registro de Tentativa de Contato</h2>
+        <h2>Registro de Contato</h2>
         <form id="form2">
             <div class="form-group">
                 <label>Número do Chamado <span class="required">*</span></label>
-                <input type="text" id="chamado" placeholder="Ex: 123456">
+                <input type="text" id="chamado_cont" placeholder="Ex: 123456">
             </div>
             <div class="form-group">
                 <label>Preciso falar com:</label>
-                <input type="text" id="destinatario" placeholder="Ex: Gerente">
+                <input type="text" id="destinatario_cont" placeholder="Ex: Gerente">
             </div>
             <div class="form-group">
-                <label>Ramais Utilizados (1º obrigatório) <span class="required">*</span></label>
-                <div class="ramais-grid">
-                    <input type="text" id="ramal1" placeholder="Ramal 1">
-                    <input type="text" id="ramal2" placeholder="Ramal 2">
-                    <input type="text" id="ramal3" placeholder="Ramal 3">
-                    <input type="text" id="ramal4" placeholder="Ramal 4">
+                <label>Ramais Utilizados <span class="required">*</span></label>
+                <div class="grid-2">
+                    <input type="text" id="ram1" placeholder="Ramal 1">
+                    <input type="text" id="ram2" placeholder="Ramal 2">
+                    <input type="text" id="ram3" placeholder="Ramal 3">
+                    <input type="text" id="ram4" placeholder="Ramal 4">
                 </div>
             </div>
             <div class="btn-group">
@@ -149,42 +152,23 @@
     <div class="container">
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
-            <div class="form-group">
-                <label>Data e Hora:</label>
-                <input type="text" id="dataAtendimento" readonly style="background:#eee">
-            </div>
+            <div class="form-group"><label>Data e Hora:</label><input type="text" id="dataAtend" readonly style="background:#eee"></div>
             <div class="form-group">
                 <label>Tipo:</label>
-                <select id="tipoAtendimento" onchange="checkFCR()">
+                <select id="tipoAtend" onchange="checkFCR()">
                     <option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option>
                     <option value="CHAMADO ABERTO">CHAMADO ABERTO</option>
                 </select>
             </div>
-
-            <div class="ramais-grid">
-                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome" required></div>
-                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="codLoja" required></div>
+            <div class="grid-2">
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div>
+                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div>
             </div>
-
-            <div class="ramais-grid">
-                <div class="form-group"><label>Telefone 1:</label><input type="text" id="tel1" required></div>
-                <div class="form-group"><label>Telefone 2:</label><input type="text" id="tel2"></div>
+            <div class="grid-2">
+                <div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div>
+            
             </div>
-
-            <div class="form-group"><label>E-mail:</label><input type="email" id="email_atend"></div>
-
-            <div class="form-group">
-                <label>Localização:</label>
-                <select id="local_atend">
-                    <option value="PDV">Frente de Caixa (PDV)</option>
-                    <option value="Escritorio">Escritório / Administrativo</option>
-                    <option value="CD">CD</option>
-                    <option value="RM">RM</option>
-                    <option value="Loja">Loja</option>
-                    <option value="Outros">Outros</option>
-                </select>
-            </div>
-
+           
             <div class="form-group">
                 <label>Categoria:</label>
                 <select id="cat_atend" onchange="toggleEquip()">
@@ -192,153 +176,130 @@
                     <option value="Equipamento">Equipamento (Hardware)</option>
                 </select>
             </div>
-
             <div id="equipment-fields">
-                <div class="form-group">
-                    <label>Equipamento:</label>
-                    <select id="equip_tipo">
-                        <option value="Computador">Computador / Notebook</option>
-                        <option value="Impressora">Impressora</option>
-                        <option value="Pinpad">Pinpad</option>
-                        <option value="Balança">Balança</option>
-                        <option value="Balança">Scanner</option>
-                        <option value="Balança">Leitor externo</option>
-                        <option value="Balança">Monitor</option>
-                        <option value="Balança">PDV</option>
-                        <option value="Balança">Fonte</option> 
-                        <option value="Balança">Teclado</option>
-                        
-                        <option value="Outro">Outro</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Patrimônio:</label><input type="text" id="patrimonio"></div>
+                <div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div>
+                <div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat"></div>
             </div>
-
-            <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_atend" required></textarea></div>
-            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="proc_atend" required></textarea></div>
-            
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="atend_prob"></textarea></div>
+            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="atend_proc"></textarea></div>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">Exportar</button>
                 <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar</button>
             </div>
-            <div id="status-atendimento" class="status-msg"></div>
+            <div id="status-atend" class="status-msg"></div>
+        </form>
+    </div>
+</div>
+
+<div id="mask4" class="form-content">
+    <div class="container">
+        <h2>Atendimento de Caixa</h2>
+        <form id="formCaixa">
+            <div class="form-group">
+                <label>Tipo:</label>
+                <input type="text" id="tipo_cx" value="Resolvido" readonly style="background:#eee">
+            </div>
+            <div class="grid-2">
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx" placeholder="Nome"></div>
+                <div class="form-group"><label>Loja:</label><input type="text" id="loja_cx" placeholder="Nº Loja"></div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx" placeholder="(00) 00000-0000"></div>
+                <div class="form-group"><label>Caixa Nº:</label><input type="text" id="num_cx" placeholder="Ex: 05"></div>
+            </div>
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_cx"></textarea></div>
+            <div class="form-group"><label>Procedimento Executado:</label><textarea id="proc_cx"></textarea></div>
+            <div class="btn-group">
+                <button type="button" class="action-btn btn-copy" onclick="processarCaixa('copy')">Copiar</button>
+                <button type="button" class="action-btn btn-export" onclick="processarCaixa('export')">Exportar</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('formCaixa')">Limpar</button>
+            </div>
+            <div id="status-caixa" class="status-msg"></div>
         </form>
     </div>
 </div>
 
 <script>
     // NAVEGAÇÃO
-    function switchForm(formId, btn) {
+    function switchForm(id, btn) {
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(formId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-        if(formId === 'mask3') setDate();
+        if(id === 'mask3') setAtendData();
     }
 
-    function limpar(formId) {
-        if(confirm("Deseja limpar todos os campos?")) {
-            document.getElementById(formId).reset();
-            if(formId === 'registroForm') { setDate(); toggleEquip(); checkFCR(); }
+    function limpar(id) {
+        if(confirm("Limpar campos?")) {
+            document.getElementById(id).reset();
+            if(id === 'registroForm') setAtendData();
         }
     }
 
-    // BALANÇA
-    function copiarTexto(tipo) {
-        const texto = `--- CARGA BALANÇA ---\nData: ${new Date().toLocaleString()}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
-        navigator.clipboard.writeText(texto);
-        document.getElementById('status-balanca').innerText = "Copiado!";
-        setTimeout(() => document.getElementById('status-balanca').innerText = "", 2000);
+    // LÓGICA BALANÇA
+    function copiarBalanca() {
+        const t = `--- CARGA BALANÇA ---\nLoja: ${document.getElementById('loja_bal').value}\nContato: ${document.getElementById('contato_bal').value}\nDepto: ${document.getElementById('depto_bal').value}\nMotivo: ${document.getElementById('motivo_bal').value}`;
+        navigator.clipboard.writeText(t);
+        showStatus('status-balanca', 'Copiado!');
     }
 
-    function exportarTXT(tipo) {
-        const texto = `--- CARGA BALANÇA ---\nData: ${new Date().toLocaleString()}\nLoja: ${document.getElementById('loja').value}\nContato: ${document.getElementById('contato').value}\nBalança: ${document.getElementById('balanca_id').value}\nDepto: ${document.getElementById('depto').value}\nMotivo: ${document.getElementById('motivo').value}`;
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.download = `carga_balanca.txt`;
-        link.href = window.URL.createObjectURL(blob);
-        link.click();
-    }
-
-    // CONTATO
+    // LÓGICA CONTATO
     function processarContato(acao) {
-        const chamado = document.getElementById('chamado').value;
-        const r1 = document.getElementById('ramal1').value;
-        if (!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
-        const texto = `--- TENTATIVA DE CONTATO ---\nData: ${new Date().toLocaleString()}\nChamado: ${chamado}\nDestinatário: ${document.getElementById('destinatario').value}\nRamais: ${r1}\nStatus: Sem êxito.`;
+        const cham = document.getElementById('chamado_cont').value;
+        const texto = `--- TENTATIVA DE CONTATO ---\nChamado: ${cham}\nDestinatário: ${document.getElementById('destinatario_cont').value}\nStatus: Sem êxito.`;
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-contato', 'Sucesso!');
+    }
+
+    // LÓGICA ATENDIMENTO
+    function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
+    function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
+    function checkFCR() { document.getElementById('atend_proc').classList.toggle('fcr-highlight', document.getElementById('tipoAtend').value.includes('FCR')); }
+    
+    function processarAtendimento(acao) {
+        const texto = `==================================\nPROBLEMA: ${document.getElementById('atend_prob').value}\nPROCEDIMENTO: ${document.getElementById('atend_proc').value}\n==================================\nSOLICITANTE: ${document.getElementById('nome_atend').value}\nLOJA: ${document.getElementById('loja_atend').value}\n==================================`;
+        if(acao === 'copy') navigator.clipboard.writeText(texto);
+        showStatus('status-atend', 'Copiado!');
+    }
+
+    // LÓGICA CAIXA (NOVA MÁSCARA)
+    function processarCaixa(acao) {
+        const texto = `DATA/HORA: ${new Date().toLocaleString('pt-BR')}
+TIPO: ${document.getElementById('tipo_cx').value}
+-----------------------------------
+SOLICITANTE: ${document.getElementById('sol_cx').value}
+LOJA: ${document.getElementById('loja_cx').value}
+TELEFONE: ${document.getElementById('tel_cx').value}
+CAIXA Nº: ${document.getElementById('num_cx').value}
+-----------------------------------
+PROBLEMA RELATADO:
+${document.getElementById('prob_cx').value}
+
+PROCEDIMENTO EXECUTADO:
+${document.getElementById('proc_cx').value}
+-----------------------------------`;
+
         if(acao === 'copy') {
             navigator.clipboard.writeText(texto);
-            document.getElementById('status-contato').innerText = "Copiado!";
+            showStatus('status-caixa', 'Copiado!');
         } else {
-            const blob = new Blob([texto], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.download = `contato_${chamado}.txt`;
+            const blob = new Blob([texto], { type: "text/plain" });
+            const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
+            link.download = `atendimento_caixa.txt`;
             link.click();
+            showStatus('status-caixa', 'Exportado!');
         }
-        setTimeout(() => document.getElementById('status-contato').innerText = "", 2000);
     }
 
-    // ATENDIMENTO (MÁSCARA COMPLETA)
-    function setDate() {
-        document.getElementById('dataAtendimento').value = new Date().toLocaleString('pt-BR');
+    function showStatus(id, msg) {
+        const el = document.getElementById(id);
+        el.innerText = msg;
+        setTimeout(() => el.innerText = '', 2000);
     }
 
-    function toggleEquip() {
-        const isEquip = document.getElementById('cat_atend').value === "Equipamento";
-        document.getElementById('equipment-fields').style.display = isEquip ? 'block' : 'none';
-    }
-
-    function checkFCR() {
-        const isFcr = document.getElementById('tipoAtendimento').value.includes("FCR");
-        document.getElementById('proc_atend').classList.toggle('fcr-highlight', isFcr);
-    }
-
-    function processarAtendimento(acao) {
-        const prob = document.getElementById('prob_atend').value;
-        const proc = document.getElementById('proc_atend').value;
-        const nome = document.getElementById('nome').value;
-        const loja = document.getElementById('codLoja').value;
-
-        if(!prob || !proc || !nome || !loja) { alert("Preencha os campos obrigatórios!"); return; }
-
-        let equipText = "";
-        if(document.getElementById('cat_atend').value === "Equipamento") {
-            equipText = `Equipamento: ${document.getElementById('equip_tipo').value}\nPatrimônio: ${document.getElementById('patrimonio').value || 'N/I'}\n`;
-        }
-
-        const textoFinal = `==================================\n` +
-            `PROBLEMA RELATADO:\n${prob}\n\n` +
-            `PROCEDIMENTO REALIZADO:\n${proc}\n` +
-            `==================================\n` +
-            `--- INFORMAÇÕES DE CONTATO ---\n` +
-            `Data: ${document.getElementById('dataAtendimento').value}\n` +
-            `Tipo: ${document.getElementById('tipoAtendimento').value}\n` +
-            `Solicitante: ${nome}\n` +
-            `Loja/Setor: ${loja}\n` +
-            `Telefone: ${document.getElementById('tel1').value} / ${document.getElementById('tel2').value}\n` +
-            `E-mail: ${document.getElementById('email_atend').value || 'Não informado'}\n` +
-            `Local: ${document.getElementById('local_atend').value}\n` +
-            `Categoria: ${document.getElementById('cat_atend').value}\n` +
-            equipText +
-            `==================================`;
-
-        if(acao === 'copy') {
-            navigator.clipboard.writeText(textoFinal);
-            document.getElementById('status-atendimento').innerText = "Copiado!";
-        } else {
-            const blob = new Blob([textoFinal], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.download = `atendimento_${loja}.txt`;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-        }
-        setTimeout(() => document.getElementById('status-atendimento').innerText = "", 2000);
-    }
-
-    window.onload = () => { setDate(); toggleEquip(); };
+    window.onload = setAtendData;
 </script>
-
 </body>
 </html>
