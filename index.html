@@ -253,15 +253,59 @@
     }
 
     // LÓGICA ATENDIMENTO
-    function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
-    function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
-    function checkFCR() { document.getElementById('atend_proc').classList.toggle('fcr-highlight', document.getElementById('tipoAtend').value.includes('FCR')); }
-    
     function processarAtendimento(acao) {
-        const texto = `==================================\nPROBLEMA: ${document.getElementById('atend_prob').value}\nPROCEDIMENTO: ${document.getElementById('atend_proc').value}\n==================================\nSOLICITANTE: ${document.getElementById('nome_atend').value}\nLOJA: ${document.getElementById('loja_atend').value}\n==================================`;
-        if(acao === 'copy') navigator.clipboard.writeText(texto);
-        showStatus('status-atend', 'Copiado!');
+    // Captura de todos os valores dos campos
+    const data = document.getElementById('dataAtend').value;
+    const tipo = document.getElementById('tipoAtend').value;
+    const nome = document.getElementById('nome_atend').value;
+    const loja = document.getElementById('loja_atend').value;
+    const tel1 = document.getElementById('atend_tel1').value;
+    const tel2 = document.getElementById('atend_tel2').value;
+    const email = document.getElementById('atend_email').value;
+    const cat = document.getElementById('cat_atend').value;
+    const prob = document.getElementById('atend_prob').value;
+    const proc = document.getElementById('atend_proc').value;
+
+    // Lógica condicional para Equipamento
+    let infoEquipamento = "";
+    if (cat === 'Equipamento') {
+        const eqNome = document.getElementById('eq_nome').value;
+        const eqPat = document.getElementById('eq_pat').value;
+        infoEquipamento = `EQUIPAMENTO: ${eqNome}\nPATRIMÔNIO: ${eqPat}\n`;
     }
+
+    // Montagem da máscara completa
+    const texto = `==================================
+PROBLEMA RELATADO:
+${prob}
+
+PROCEDIMENTO REALIZADO:
+${proc}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${data}
+TIPO: ${tipo}
+SOLICITANTE: ${nome}
+LOJA/SETOR: ${loja}
+TELEFONE: ${tel1}${tel2 ? ' / ' + tel2 : ''}
+E-MAIL: ${email || 'Não informado'}
+CATEGORIA: ${cat}
+${infoEquipamento}==================================`;
+
+    // Execução da ação (Copiar ou Exportar)
+    if (acao === 'copy') {
+        navigator.clipboard.writeText(texto).then(() => {
+            showStatus('status-atend', 'Copiado com sucesso!');
+        });
+    } else {
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.download = `atendimento_${loja || 'ti'}.txt`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        showStatus('status-atend', 'Arquivo gerado!');
+    }
+}
 
     // LÓGICA CAIXA (NOVA MÁSCARA)
     function processarCaixa(acao) {
