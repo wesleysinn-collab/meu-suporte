@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Suporte TI - Oficial com IA</title>
+    <title>Portal de Suporte TI - IA Ativada</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -42,7 +42,7 @@
             border-radius: 4px; box-sizing: border-box; font-family: inherit;
         }
 
-        textarea { height: 80px; resize: vertical; }
+        textarea { height: 100px; resize: vertical; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
@@ -55,20 +55,17 @@
         .btn-copy { background: var(--accent); }
         .btn-export { background: var(--success); }
         .btn-clear { background: var(--danger); grid-column: span 2; }
+        
         .btn-ia { 
             background: var(--warning); color: white; border: none; 
-            padding: 4px 8px; border-radius: 4px; cursor: pointer; 
-            font-size: 11px; font-weight: bold; 
+            padding: 5px 12px; border-radius: 4px; cursor: pointer; 
+            font-size: 12px; font-weight: bold; transition: 0.3s;
         }
+        .btn-ia:hover { background: #e67e22; transform: scale(1.02); }
+        .btn-ia:disabled { background: #ccc; cursor: not-allowed; }
         
-        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
+        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; font-weight: bold; }
         #equipment-fields { display: none; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px dashed #ccc; }
-        
-        /* Estilo da Configuração da IA */
-        .config-ia {
-            max-width: 600px; margin: 20px auto; padding: 15px; 
-            background: #eee; border-radius: 8px; font-size: 12px;
-        }
     </style>
 </head>
 <body>
@@ -102,8 +99,13 @@
     <div class="container">
         <h2>Registro de Contato</h2>
         <form id="form2">
-            <div class="form-group"><label>Chamado:</label><input type="text" id="chamado_cont"></div>
-            <div class="form-group"><label>Ramais:</label><div class="grid-2"><input type="text" id="ram1"><input type="text" id="ram2"><input type="text" id="ram3"><input type="text" id="ram4"></div></div>
+            <div class="form-group"><label>Número do Chamado:</label><input type="text" id="chamado_cont"></div>
+            <div class="form-group"><label>Ramais Utilizados:</label>
+                <div class="grid-2">
+                    <input type="text" id="ram1" placeholder="R1"><input type="text" id="ram2" placeholder="R2">
+                    <input type="text" id="ram3" placeholder="R3"><input type="text" id="ram4" placeholder="R4">
+                </div>
+            </div>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarContato('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarContato('export')">Exportar</button>
@@ -118,20 +120,24 @@
     <div class="container">
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
-            <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div>
-            <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div>
-            <div class="form-group"><label>Categoria:</label><select id="cat_atend" onchange="toggleEquip()"><option value="Sistema">Sistema</option><option value="Equipamento">Equipamento</option></select></div>
-            <div id="equipment-fields"><input type="text" id="eq_nome" placeholder="Equipamento"><input type="text" id="eq_pat" placeholder="Patrimônio"></div>
+            <div class="form-group"><label>Data:</label><input type="text" id="dataAtend" readonly style="background:#eee"></div>
+            <div class="grid-2"><input type="text" id="nome_atend" placeholder="Solicitante"><input type="text" id="loja_atend" placeholder="Loja"></div>
+            <div class="form-group" style="margin-top:10px">
+                <label>Categoria:</label>
+                <select id="cat_atend" onchange="toggleEquip()">
+                    <option value="Sistema">Sistema</option>
+                    <option value="Equipamento">Equipamento</option>
+                </select>
+            </div>
+            <div id="equipment-fields"><div class="grid-2"><input type="text" id="eq_nome" placeholder="Equip."><input type="text" id="eq_pat" placeholder="Patrimônio"></div></div>
             <div class="form-group"><label>Problema:</label><textarea id="atend_prob"></textarea></div>
-            
             <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin-bottom: 0;">Procedimento Realizado:</label>
-                    <button type="button" class="btn-ia" onclick="melhorarTextoIA('atend_proc')">✨ Melhorar com IA</button>
+                    <label style="margin:0">Procedimento:</label>
+                    <button type="button" class="btn-ia" id="btn_ia_atend" onclick="melhorarComGemini('atend_proc', 'btn_ia_atend')">✨ IA Melhorar</button>
                 </div>
-                <textarea id="atend_proc" placeholder="Descreva o que foi feito..."></textarea>
+                <textarea id="atend_proc"></textarea>
             </div>
-
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">Exportar</button>
@@ -146,17 +152,16 @@
     <div class="container">
         <h2>Atendimento de Caixa</h2>
         <form id="formCaixa">
-            <div class="grid-2"><div class="form-group"><label>Loja:</label><input type="text" id="loja_cx"></div><div class="form-group"><label>Caixa:</label><input type="text" id="num_cx"></div></div>
-            <div class="form-group"><label>Problema:</label><textarea id="prob_cx"></textarea></div>
-            
+            <div class="grid-2"><input type="text" id="sol_cx" placeholder="Solicitante"><input type="text" id="loja_cx" placeholder="Loja"></div>
+            <div class="grid-2" style="margin-top:10px"><input type="text" id="tel_cx" placeholder="Telefone"><input type="text" id="num_cx" placeholder="Caixa Nº"></div>
+            <div class="form-group" style="margin-top:10px"><label>Problema:</label><textarea id="prob_cx"></textarea></div>
             <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin-bottom: 0;">Procedimento Executado:</label>
-                    <button type="button" class="btn-ia" onclick="melhorarTextoIA('proc_cx')">✨ Melhorar com IA</button>
+                    <label style="margin:0">Procedimento:</label>
+                    <button type="button" class="btn-ia" id="btn_ia_cx" onclick="melhorarComGemini('proc_cx', 'btn_ia_cx')">✨ IA Melhorar</button>
                 </div>
-                <textarea id="proc_cx" placeholder="Descreva a solução..."></textarea>
+                <textarea id="proc_cx"></textarea>
             </div>
-
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarCaixa('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarCaixa('export')">Exportar</button>
@@ -167,61 +172,59 @@
     </div>
 </div>
 
-<div class="config-ia">
-    <strong>Configuração da IA:</strong><br>
-    <input type="password" id="hf_token" placeholder="Cole seu Token do Hugging Face aqui" style="margin-top: 5px; font-size: 11px;">
-    <p style="margin-top: 5px; color: #666;">O Token fica salvo localmente no seu navegador.</p>
-</div>
-
 <script>
-    // ---------------- LÓGICA DE NAVEGAÇÃO E LIMPEZA ----------------
+    const CHAVE_GEMINI = "AIzaSyAHbofUJnIlvLFZvP0eim68LX_57Zns8IA";
+
+    // NAVEGAÇÃO
     function switchForm(id, btn) {
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
+        if(id === 'mask3') document.getElementById('dataAtend').value = new Date().toLocaleString();
+    }
+
+    function showStatus(id, msg, isError = false) {
+        const el = document.getElementById(id);
+        el.innerText = msg;
+        el.style.color = isError ? "var(--danger)" : "var(--success)";
+        setTimeout(() => el.innerText = '', 3000);
     }
 
     function limpar(id) {
-        if(confirm("Limpar campos?")) document.getElementById(id).reset();
-    }
-
-    function showStatus(id, msg) {
-        const el = document.getElementById(id);
-        el.innerText = msg;
-        setTimeout(() => el.innerText = '', 3000);
+        if(confirm("Limpar?")) document.getElementById(id).reset();
     }
 
     function downloadTxt(nome, texto) {
         const blob = new Blob([texto], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = nome; link.click();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = nome; a.click();
     }
 
-    // ---------------- LÓGICA DAS MÁSCARAS ----------------
+    // LÓGICA DAS MÁSCARAS
     function processarBalanca(acao) {
-        const texto = `--- CARGA BALANÇA ---\nLOJA: ${document.getElementById('loja_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
-        acao === 'copy' ? navigator.clipboard.writeText(texto) : downloadTxt('balanca.txt', texto);
+        const t = `--- CARGA BALANÇA ---\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
+        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('carga.txt', t);
         showStatus('status-balanca', 'Sucesso!');
     }
 
     function processarContato(acao) {
         const r = [1,2,3,4].map(i => document.getElementById('ram'+i).value.trim()).filter(x => x).join(", ");
-        const texto = `--- TENTATIVA DE CONTATO ---\nCHAMADO: ${document.getElementById('chamado_cont').value}\nRAMAIS: ${r}\nSTATUS: Sem êxito.`;
-        acao === 'copy' ? navigator.clipboard.writeText(texto) : downloadTxt('contato.txt', texto);
+        const t = `--- TENTATIVA DE CONTATO ---\nCHAMADO: ${document.getElementById('chamado_cont').value}\nRAMAIS: ${r}\nSTATUS: Sem êxito.`;
+        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('contato.txt', t);
         showStatus('status-contato', 'Sucesso!');
     }
 
     function processarAtendimento(acao) {
-        const texto = `PROBLEMA: ${document.getElementById('atend_prob').value}\nPROCEDIMENTO: ${document.getElementById('atend_proc').value}\nLOJA: ${document.getElementById('loja_atend').value}`;
-        acao === 'copy' ? navigator.clipboard.writeText(texto) : downloadTxt('atendimento.txt', texto);
+        const t = `==================================\nPROBLEMA: ${document.getElementById('atend_prob').value}\n\nPROCEDIMENTO: ${document.getElementById('atend_proc').value}\n==================================\nSOLICITANTE: ${document.getElementById('nome_atend').value}\nLOJA: ${document.getElementById('loja_atend').value}\n==================================`;
+        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('atend.txt', t);
         showStatus('status-atend', 'Sucesso!');
     }
 
     function processarCaixa(acao) {
-        const texto = `PROBLEMA: ${document.getElementById('prob_cx').value}\nPROCEDIMENTO: ${document.getElementById('proc_cx').value}\nLOJA: ${document.getElementById('loja_cx').value}`;
-        acao === 'copy' ? navigator.clipboard.writeText(texto) : downloadTxt('caixa.txt', texto);
+        const t = `==================================\nPROBLEMA: ${document.getElementById('prob_cx').value}\n\nPROCEDIMENTO: ${document.getElementById('proc_cx').value}\n==================================\nLOJA: ${document.getElementById('loja_cx').value} | CAIXA: ${document.getElementById('num_cx').value}\n==================================`;
+        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('caixa.txt', t);
         showStatus('status-caixa', 'Sucesso!');
     }
 
@@ -229,45 +232,42 @@
         document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none';
     }
 
-    // ---------------- LÓGICA DA IA (O QUE VOCÊ PEDIU) ----------------
-    async function melhorarTextoIA(campoId) {
-        const token = document.getElementById('hf_token').value;
+    // LÓGICA DA IA GEMINI
+    async function melhorarComGemini(campoId, btnId) {
         const campo = document.getElementById(campoId);
+        const btn = document.getElementById(btnId);
         const statusId = campoId === 'atend_proc' ? 'status-atend' : 'status-caixa';
+        const texto = campo.value.trim();
 
-        if (!token) return alert("Insira o Token do Hugging Face no final da página!");
-        if (!campo.value.trim()) return alert("Escreva o procedimento primeiro!");
+        if(!texto) return alert("Escreva algo primeiro!");
 
-        showStatus(statusId, "✨ IA Refinando seu texto...");
-        campo.style.opacity = "0.5";
+        btn.disabled = true;
+        btn.innerText = "⏳ Analisando...";
+        showStatus(statusId, "IA processando...");
 
         try {
-            const response = await fetch("https://router.huggingface.co/v1/chat/completions", {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CHAVE_GEMINI}`, {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    model: "moonshotai/Kimi-K2-Instruct-0905",
-                    messages: [{ role: "user", content: `Melhore tecnicamente para um chamado de TI (seja direto e profissional): ${campo.value}` }],
-                    max_tokens: 300
+                    contents: [{ parts: [{ text: `Reescreva o seguinte procedimento de suporte de TI de forma técnica, profissional e objetiva, corrigindo a gramática e termos: ${texto}` }] }]
                 })
             });
 
-            const data = await response.json();
-            if (data.choices) {
-                campo.value = data.choices[0].message.content.trim();
-                showStatus(statusId, "✅ Texto atualizado pela IA!");
-            }
+            const data = await resp.json();
+            const resultado = data.candidates[0].content.parts[0].text;
+            campo.value = resultado.trim();
+            showStatus(statusId, "✅ Texto Refinado!");
         } catch (e) {
-            alert("Erro na IA. Verifique o Token.");
+            console.error(e);
+            showStatus(statusId, "❌ Erro na IA", true);
         } finally {
-            campo.style.opacity = "1";
+            btn.disabled = false;
+            btn.innerText = "✨ IA Melhorar";
         }
     }
 
-    // Salvar token no navegador
-    document.getElementById('hf_token').addEventListener('input', (e) => localStorage.setItem('my_hf_token', e.target.value));
-    window.onload = () => { if(localStorage.getItem('my_hf_token')) document.getElementById('hf_token').value = localStorage.getItem('my_hf_token'); };
+    window.onload = () => { document.getElementById('dataAtend').value = new Date().toLocaleString(); };
 </script>
-
 </body>
 </html>
