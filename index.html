@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Suporte TI - IA Ativada</title>
+    <title>Portal de Suporte TI - Oficial</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -11,15 +11,20 @@
             --bg: #f4f7f6;
             --success: #27ae60;
             --danger: #e74c3c;
-            --warning: #f39c12;
         }
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
         
         .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
-            padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;
-            background: #dcdde1; font-weight: bold; transition: 0.3s; font-size: 13px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #dcdde1;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 13px;
         }
         .nav-btn.active { background: var(--accent); color: white; }
 
@@ -28,9 +33,14 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .container { 
-            background: #fff; padding: 25px; border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; 
-            max-width: 600px; margin: 0 auto; box-sizing: border-box;
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            box-sizing: border-box;
         }
 
         h2 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; margin-bottom: 20px; }
@@ -38,11 +48,15 @@
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
         
         input, select, textarea { 
-            width: 100%; padding: 10px; border: 1px solid #ddd; 
-            border-radius: 4px; box-sizing: border-box; font-family: inherit;
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-family: inherit;
         }
 
-        textarea { height: 100px; resize: vertical; }
+        textarea { height: 80px; resize: vertical; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
@@ -56,15 +70,10 @@
         .btn-export { background: var(--success); }
         .btn-clear { background: var(--danger); grid-column: span 2; }
         
-        .btn-ia { 
-            background: var(--warning); color: white; border: none; 
-            padding: 5px 12px; border-radius: 4px; cursor: pointer; 
-            font-size: 12px; font-weight: bold; transition: 0.3s;
-        }
-        .btn-ia:hover { background: #e67e22; transform: scale(1.02); }
-        .btn-ia:disabled { background: #ccc; cursor: not-allowed; }
+        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
+        .required { color: var(--danger); }
+        .fcr-highlight { border: 2px solid var(--success) !important; background-color: #f0fff4 !important; }
         
-        .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; font-weight: bold; }
         #equipment-fields { display: none; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px dashed #ccc; }
     </style>
 </head>
@@ -84,6 +93,15 @@
             <div class="form-group"><label>Loja:</label><input type="text" id="loja_bal"></div>
             <div class="form-group"><label>Contato:</label><input type="text" id="contato_bal"></div>
             <div class="form-group"><label>Balança:</label><input type="text" id="balanca_id"></div>
+            <div class="form-group">
+                <label>Departamento:</label>
+                <select id="depto_bal">
+                    <option value="Açougue">Açougue</option>
+                    <option value="Padaria">Padaria</option>
+                    <option value="Hortifruti">Hortifruti</option>
+                    <option value="Frios">Frios</option>
+                </select>
+            </div>
             <div class="form-group"><label>Motivo:</label><textarea id="motivo_bal"></textarea></div>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarBalanca('copy')">Copiar</button>
@@ -99,7 +117,8 @@
     <div class="container">
         <h2>Registro de Contato</h2>
         <form id="form2">
-            <div class="form-group"><label>Número do Chamado:</label><input type="text" id="chamado_cont"></div>
+            <div class="form-group"><label>Número do Chamado <span class="required">*</span></label><input type="text" id="chamado_cont"></div>
+            <div class="form-group"><label>Preciso falar com:</label><input type="text" id="destinatario_cont"></div>
             <div class="form-group"><label>Ramais Utilizados:</label>
                 <div class="grid-2">
                     <input type="text" id="ram1" placeholder="R1"><input type="text" id="ram2" placeholder="R2">
@@ -120,24 +139,15 @@
     <div class="container">
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
-            <div class="form-group"><label>Data:</label><input type="text" id="dataAtend" readonly style="background:#eee"></div>
-            <div class="grid-2"><input type="text" id="nome_atend" placeholder="Solicitante"><input type="text" id="loja_atend" placeholder="Loja"></div>
-            <div class="form-group" style="margin-top:10px">
-                <label>Categoria:</label>
-                <select id="cat_atend" onchange="toggleEquip()">
-                    <option value="Sistema">Sistema</option>
-                    <option value="Equipamento">Equipamento</option>
-                </select>
-            </div>
-            <div id="equipment-fields"><div class="grid-2"><input type="text" id="eq_nome" placeholder="Equip."><input type="text" id="eq_pat" placeholder="Patrimônio"></div></div>
-            <div class="form-group"><label>Problema:</label><textarea id="atend_prob"></textarea></div>
-            <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin:0">Procedimento:</label>
-                    <button type="button" class="btn-ia" id="btn_ia_atend" onclick="melhorarComGemini('atend_proc', 'btn_ia_atend')">✨ IA Melhorar</button>
-                </div>
-                <textarea id="atend_proc"></textarea>
-            </div>
+            <div class="form-group"><label>Data e Hora:</label><input type="text" id="dataAtend" readonly style="background:#eee"></div>
+            <div class="form-group"><label>Tipo:</label><select id="tipoAtend" onchange="checkFCR()"><option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option><option value="CHAMADO ABERTO">CHAMADO ABERTO</option></select></div>
+            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div><div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div></div>
+            <div class="grid-2"><div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div><div class="form-group"><label>Telefone 2:</label><input type="text" id="atend_tel2"></div></div>
+            <div class="form-group"><label>E-mail:</label><input type="text" id="atend_email"></div>
+            <div class="form-group"><label>Categoria:</label><select id="cat_atend" onchange="toggleEquip()"><option value="Sistema">Sistema (Software)</option><option value="Equipamento">Equipamento (Hardware)</option></select></div>
+            <div id="equipment-fields"><div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div><div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat"></div></div>
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="atend_prob"></textarea></div>
+            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="atend_proc"></textarea></div>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">Exportar</button>
@@ -152,16 +162,11 @@
     <div class="container">
         <h2>Atendimento de Caixa</h2>
         <form id="formCaixa">
-            <div class="grid-2"><input type="text" id="sol_cx" placeholder="Solicitante"><input type="text" id="loja_cx" placeholder="Loja"></div>
-            <div class="grid-2" style="margin-top:10px"><input type="text" id="tel_cx" placeholder="Telefone"><input type="text" id="num_cx" placeholder="Caixa Nº"></div>
-            <div class="form-group" style="margin-top:10px"><label>Problema:</label><textarea id="prob_cx"></textarea></div>
-            <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin:0">Procedimento:</label>
-                    <button type="button" class="btn-ia" id="btn_ia_cx" onclick="melhorarComGemini('proc_cx', 'btn_ia_cx')">✨ IA Melhorar</button>
-                </div>
-                <textarea id="proc_cx"></textarea>
-            </div>
+            <div class="form-group"><label>Tipo:</label><input type="text" id="tipo_cx" value="Resolvido" readonly style="background:#eee"></div>
+            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx"></div><div class="form-group"><label>Loja:</label><input type="text" id="loja_cx"></div></div>
+            <div class="grid-2"><div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx"></div><div class="form-group"><label>Caixa Nº:</label><input type="text" id="num_cx"></div></div>
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_cx"></textarea></div>
+            <div class="form-group"><label>Procedimento Executado:</label><textarea id="proc_cx"></textarea></div>
             <div class="btn-group">
                 <button type="button" class="action-btn btn-copy" onclick="processarCaixa('copy')">Copiar</button>
                 <button type="button" class="action-btn btn-export" onclick="processarCaixa('export')">Exportar</button>
@@ -173,101 +178,135 @@
 </div>
 
 <script>
-    const CHAVE_GEMINI = "AIzaSyAHbofUJnIlvLFZvP0eim68LX_57Zns8IA";
-
-    // NAVEGAÇÃO
+    // FUNÇÕES DE SUPORTE
     function switchForm(id, btn) {
         document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-        if(id === 'mask3') document.getElementById('dataAtend').value = new Date().toLocaleString();
-    }
-
-    function showStatus(id, msg, isError = false) {
-        const el = document.getElementById(id);
-        el.innerText = msg;
-        el.style.color = isError ? "var(--danger)" : "var(--success)";
-        setTimeout(() => el.innerText = '', 3000);
+        if(id === 'mask3') setAtendData();
     }
 
     function limpar(id) {
-        if(confirm("Limpar?")) document.getElementById(id).reset();
-    }
-
-    function downloadTxt(nome, texto) {
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = nome; a.click();
-    }
-
-    // LÓGICA DAS MÁSCARAS
-    function processarBalanca(acao) {
-        const t = `--- CARGA BALANÇA ---\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
-        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('carga.txt', t);
-        showStatus('status-balanca', 'Sucesso!');
-    }
-
-    function processarContato(acao) {
-        const r = [1,2,3,4].map(i => document.getElementById('ram'+i).value.trim()).filter(x => x).join(", ");
-        const t = `--- TENTATIVA DE CONTATO ---\nCHAMADO: ${document.getElementById('chamado_cont').value}\nRAMAIS: ${r}\nSTATUS: Sem êxito.`;
-        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('contato.txt', t);
-        showStatus('status-contato', 'Sucesso!');
-    }
-
-    function processarAtendimento(acao) {
-        const t = `==================================\nPROBLEMA: ${document.getElementById('atend_prob').value}\n\nPROCEDIMENTO: ${document.getElementById('atend_proc').value}\n==================================\nSOLICITANTE: ${document.getElementById('nome_atend').value}\nLOJA: ${document.getElementById('loja_atend').value}\n==================================`;
-        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('atend.txt', t);
-        showStatus('status-atend', 'Sucesso!');
-    }
-
-    function processarCaixa(acao) {
-        const t = `==================================\nPROBLEMA: ${document.getElementById('prob_cx').value}\n\nPROCEDIMENTO: ${document.getElementById('proc_cx').value}\n==================================\nLOJA: ${document.getElementById('loja_cx').value} | CAIXA: ${document.getElementById('num_cx').value}\n==================================`;
-        acao === 'copy' ? navigator.clipboard.writeText(t) : downloadTxt('caixa.txt', t);
-        showStatus('status-caixa', 'Sucesso!');
-    }
-
-    function toggleEquip() {
-        document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none';
-    }
-
-    // LÓGICA DA IA GEMINI
-    async function melhorarComGemini(campoId, btnId) {
-        const campo = document.getElementById(campoId);
-        const btn = document.getElementById(btnId);
-        const statusId = campoId === 'atend_proc' ? 'status-atend' : 'status-caixa';
-        const texto = campo.value.trim();
-
-        if(!texto) return alert("Escreva algo primeiro!");
-
-        btn.disabled = true;
-        btn.innerText = "⏳ Analisando...";
-        showStatus(statusId, "IA processando...");
-
-        try {
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CHAVE_GEMINI}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Reescreva o seguinte procedimento de suporte de TI de forma técnica, profissional e objetiva, corrigindo a gramática e termos: ${texto}` }] }]
-                })
-            });
-
-            const data = await resp.json();
-            const resultado = data.candidates[0].content.parts[0].text;
-            campo.value = resultado.trim();
-            showStatus(statusId, "✅ Texto Refinado!");
-        } catch (e) {
-            console.error(e);
-            showStatus(statusId, "❌ Erro na IA", true);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "✨ IA Melhorar";
+        if(confirm("Limpar campos?")) {
+            document.getElementById(id).reset();
+            if(id === 'registroForm') { setAtendData(); toggleEquip(); checkFCR(); }
         }
     }
 
-    window.onload = () => { document.getElementById('dataAtend').value = new Date().toLocaleString(); };
+    function showStatus(id, msg) {
+        const el = document.getElementById(id);
+        el.innerText = msg;
+        setTimeout(() => el.innerText = '', 2500);
+    }
+
+    function fazerDownload(nomeArquivo, texto) {
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = nomeArquivo;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    // 1. CARGA BALANÇA
+    function processarBalanca(acao) {
+        const texto = `--- CARGA BALANÇA ---\nDATA: ${new Date().toLocaleString()}\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nBALANÇA: ${document.getElementById('balanca_id').value}\nDEPTO: ${document.getElementById('depto_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-balanca', 'Copiado para Área de Transferência!');
+        } else {
+            fazerDownload(`carga_loja_${document.getElementById('loja_bal').value || 'ti'}.txt`, texto);
+            showStatus('status-balanca', 'Arquivo Exportado!');
+        }
+    }
+
+    // 2. TENTATIVA CONTATO
+    function processarContato(acao) {
+        const chamado = document.getElementById('chamado_cont').value;
+        const r1 = document.getElementById('ram1').value.trim();
+        const r2 = document.getElementById('ram2').value.trim();
+        const r3 = document.getElementById('ram3').value.trim();
+        const r4 = document.getElementById('ram4').value.trim();
+        const ramais = [r1, r2, r3, r4].filter(r => r !== "").join(", ");
+
+        if(!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
+
+        const texto = `--- TENTATIVA DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nCHAMADO: ${chamado}\nDESTINATÁRIO: ${document.getElementById('destinatario_cont').value || 'Não informado'}\nRAMAIS: ${ramais}\nSTATUS: Sem êxito telefônico.`;
+        
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-contato', 'Copiado!');
+        } else {
+            fazerDownload(`contato_chamado_${chamado}.txt`, texto);
+            showStatus('status-contato', 'Arquivo Gerado!');
+        }
+    }
+
+    // 3. REGISTRO ATENDIMENTO
+    function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
+    function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
+    function checkFCR() { document.getElementById('atend_proc').classList.toggle('fcr-highlight', document.getElementById('tipoAtend').value.includes('FCR')); }
+    
+    function processarAtendimento(acao) {
+        const cat = document.getElementById('cat_atend').value;
+        let infoEq = (cat === 'Equipamento') ? `EQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}\n` : "";
+
+        const texto = `==================================
+PROBLEMA RELATADO:
+${document.getElementById('atend_prob').value}
+
+PROCEDIMENTO REALIZADO:
+${document.getElementById('atend_proc').value}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${document.getElementById('dataAtend').value}
+TIPO: ${document.getElementById('tipoAtend').value}
+SOLICITANTE: ${document.getElementById('nome_atend').value}
+LOJA/SETOR: ${document.getElementById('loja_atend').value}
+TELEFONE: ${document.getElementById('atend_tel1').value} / ${document.getElementById('atend_tel2').value}
+E-MAIL: ${document.getElementById('atend_email').value || 'Não informado'}
+CATEGORIA: ${cat}
+${infoEq}==================================`;
+
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-atend', 'Copiado!');
+        } else {
+            fazerDownload(`atendimento_${document.getElementById('loja_atend').value || 'ti'}.txt`, texto);
+            showStatus('status-atend', 'Arquivo Gerado!');
+        }
+    }
+
+    // 4. ATENDIMENTO DE CAIXA
+    function processarCaixa(acao) {
+        const loja = document.getElementById('loja_cx').value;
+        const texto = `==================================
+PROBLEMA RELATADO:
+${document.getElementById('prob_cx').value}
+
+PROCEDIMENTO EXECUTADO:
+${document.getElementById('proc_cx').value}
+==================================
+--- INFORMAÇÕES DE CONTATO ---
+DATA/HORA: ${new Date().toLocaleString()}
+TIPO: ${document.getElementById('tipo_cx').value}
+SOLICITANTE: ${document.getElementById('sol_cx').value}
+LOJA: ${loja}
+TELEFONE: ${document.getElementById('tel_cx').value}
+CAIXA Nº: ${document.getElementById('num_cx').value}
+==================================`;
+
+        if(acao === 'copy') {
+            navigator.clipboard.writeText(texto);
+            showStatus('status-caixa', 'Copiado!');
+        } else {
+            fazerDownload(`caixa_loja_${loja || 'ti'}.txt`, texto);
+            showStatus('status-caixa', 'Arquivo Gerado!');
+        }
+    }
+
+    window.onload = setAtendData;
 </script>
 </body>
 </html>
