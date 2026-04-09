@@ -16,6 +16,7 @@
             --success: #27ae60;
             --danger: #e74c3c;
             --whatsapp: #25d366;
+            --export: #8e44ad;
         }
 
         [data-theme="dark"] {
@@ -27,16 +28,16 @@
             --input-border: #444444;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text-color); margin: 0; padding: 20px; transition: 0.3s; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text-color); margin: 0; padding: 20px; transition: 0.3s; }
         
         .theme-switch { position: fixed; top: 15px; right: 15px; z-index: 100; }
-        .theme-btn { background: var(--primary); color: var(--bg); border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .theme-btn { background: var(--primary); color: var(--bg); border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; }
 
         .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .nav-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; background: #dcdde1; font-weight: bold; transition: 0.3s; }
+        .nav-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; background: #dcdde1; font-weight: bold; transition: 0.3s; color: #333; }
         .nav-btn.active { background: var(--accent); color: white; }
 
-        .container { background: var(--container-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box; }
+        .container { background: var(--container-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 650px; margin: 0 auto; box-sizing: border-box; }
         h2 { color: var(--accent); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; }
         
         .form-group { margin-bottom: 15px; }
@@ -44,16 +45,21 @@
         
         input, select, textarea { 
             width: 100%; padding: 10px; border: 1px solid var(--input-border); 
-            background: var(--input-bg); color: var(--text-color); border-radius: 4px; box-sizing: border-box; 
+            background: var(--input-bg); color: var(--text-color); border-radius: 4px; box-sizing: border-box; font-family: inherit;
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Grid de botões ajustada para 4 colunas ou 2x2 */
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         
-        .action-btn { padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; text-decoration: none; text-align: center; font-size: 14px; }
+        .action-btn { padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; text-decoration: none; text-align: center; font-size: 13px; }
         .btn-copy { background: var(--accent); }
         .btn-whatsapp { background: var(--whatsapp); }
+        .btn-export { background: var(--export); }
         .btn-clear { background: var(--danger); grid-column: span 2; }
+        
+        .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
         
         .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
         #equipment-fields { display: none; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px dashed var(--accent); }
@@ -66,7 +72,7 @@
 </div>
 
 <div class="nav-container">
-    <button class="nav-btn active" onclick="switchForm('mask3', this)">Registro de atendimento</button>
+    <button class="nav-btn active" onclick="switchForm('mask3', this)">Atendimento Geral</button>
     <button class="nav-btn" onclick="switchForm('balanca', this)">Carga Balança</button>
 </div>
 
@@ -75,34 +81,37 @@
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
             <div class="form-group"><label>Data/Hora:</label><input type="text" id="dataAtend" oninput="mascara(this, 'data')"></div>
+            
             <div class="grid-2">
-                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div>
-                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div>
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend" placeholder="Ex: João Silva"></div>
+                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend" placeholder="Ex: Loja 05"></div>
             </div>
+            
             <div class="grid-2">
                 <div class="form-group"><label>WhatsApp/Tel:</label><input type="text" id="atend_tel1" oninput="mascara(this, 'tel')" placeholder="(00) 00000-0000"></div>
                 <div class="form-group"><label>Categoria:</label>
                     <select id="cat_atend" onchange="toggleEquip()">
-                        <option value="Sistema">Software</option>
-                        <option value="Equipamento">Hardware</option>
+                        <option value="Sistema">Software (Sistemas)</option>
+                        <option value="Equipamento">Hardware (Equipamento)</option>
                     </select>
                 </div>
             </div>
 
             <div id="equipment-fields">
                 <div class="grid-2">
-                    <div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div>
-                    <div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat" oninput="mascara(this, 'pat')"></div>
+                    <div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome" placeholder="Ex: Impressora"></div>
+                    <div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat" oninput="mascara(this, 'pat')" placeholder="PAT-00000"></div>
                 </div>
             </div>
 
-            <div class="form-group"><label>Problema:</label><textarea id="atend_prob"></textarea></div>
-            <div class="form-group"><label>Procedimento:</label><textarea id="atend_proc"></textarea></div>
+            <div class="form-group"><label>Problema Relatado:</label><textarea id="atend_prob" placeholder="Descreva o problema..."></textarea></div>
+            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="atend_proc" placeholder="O que foi feito para resolver..."></textarea></div>
 
             <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar Texto</button>
-                <button type="button" class="action-btn btn-whatsapp" onclick="processarAtendimento('whatsapp')">Enviar WhatsApp</button>
-                <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar Tudo</button>
+                <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">📋 Copiar</button>
+                <button type="button" class="action-btn btn-whatsapp" onclick="processarAtendimento('whatsapp')">💬 WhatsApp</button>
+                <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">💾 Exportar TXT</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">🧹 Limpar</button>
             </div>
             <div id="status-atend" class="status-msg"></div>
         </form>
@@ -110,16 +119,16 @@
 </div>
 
 <script>
-    // --- LÓGICA DE MÁSCARAS ---
-    const lógicas = {
+    // --- MÁSCARAS ---
+    const logicas = {
         tel: v => v.replace(/\D/g, '').replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 15),
         data: v => v.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{4})(\d)/, '$1 $2').replace(/(\d{2})(\d)/, '$1:$2').slice(0, 16),
         pat: v => v.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^([A-Z]{3})(\d)/, '$1-$2').slice(0, 10)
     };
 
-    function mascara(i, t) { setTimeout(() => { i.value = lógicas[t](i.value); }, 1); }
+    function mascara(i, t) { setTimeout(() => { i.value = logicas[t](i.value); }, 1); }
 
-    // --- LÓGICA DE TEMA ---
+    // --- MODO ESCURO ---
     function toggleTheme() {
         const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", t);
@@ -128,44 +137,83 @@
     }
     if(localStorage.getItem("theme") === "dark") toggleTheme();
 
-    // --- FUNÇÕES CORE ---
+    // --- FUNÇÕES GERAIS ---
+    function switchForm(id, btn) {
+        document.querySelectorAll('.form-content').forEach(f => f.style.display = 'none');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        btn.classList.add('active');
+    }
+
     function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
     
     function setAtendData() { 
-        const agora = new Date();
-        const formatado = agora.toLocaleString('pt-BR').slice(0, 16);
-        document.getElementById('dataAtend').value = formatado;
+        document.getElementById('dataAtend').value = new Date().toLocaleString('pt-BR').slice(0, 16);
     }
 
+    function fazerDownload(nomeArquivo, texto) {
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = nomeArquivo;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    // --- PROCESSAMENTO ---
     function processarAtendimento(acao) {
-        const nome = document.getElementById('nome_atend').value;
-        const loja = document.getElementById('loja_atend').value;
+        const nome = document.getElementById('nome_atend').value || "Não informado";
+        const loja = document.getElementById('loja_atend').value || "Geral";
         const tel = document.getElementById('atend_tel1').value;
         const prob = document.getElementById('atend_prob').value;
         const proc = document.getElementById('atend_proc').value;
+        const data = document.getElementById('dataAtend').value;
+        const cat = document.getElementById('cat_atend').value;
         
-        const texto = `*REGISTRO DE ATENDIMENTO TI*\n\n` +
-                      `*Solicitante:* ${nome} - ${loja}\n` +
-                      `*Data:* ${document.getElementById('dataAtend').value}\n` +
-                      `----------------------------\n` +
-                      `*PROBLEMA:* ${prob}\n` +
-                      `*SOLUÇÃO:* ${proc}\n` +
-                      `----------------------------\n` +
-                      `_Atendimento realizado pelo Portal de Suporte._`;
+        let infoEq = "";
+        if(cat === 'Equipamento') {
+            infoEq = `\nEQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}`;
+        }
+
+        // Texto plano para Cópia e TXT
+        const textoPlano = `--- REGISTRO DE ATENDIMENTO TI ---\n` +
+                           `DATA: ${data}\n` +
+                           `SOLICITANTE: ${nome}\n` +
+                           `LOJA/SETOR: ${loja}\n` +
+                           `CONTATO: ${tel}\n` +
+                           `CATEGORIA: ${cat}${infoEq}\n` +
+                           `----------------------------------\n` +
+                           `PROBLEMA RELATADO:\n${prob}\n\n` +
+                           `PROCEDIMENTO REALIZADO:\n${proc}\n` +
+                           `----------------------------------`;
+
+        // Texto com asteriscos para WhatsApp (Negrito)
+        const textoWhats = `*REGISTRO DE ATENDIMENTO TI*\n\n` +
+                           `*Solicitante:* ${nome}\n*Loja:* ${loja}\n*Data:* ${data}\n` +
+                           `--------------------------\n` +
+                           `*PROBLEMA:* ${prob}\n` +
+                           `*SOLUÇÃO:* ${proc}`;
 
         if(acao === 'copy') {
-            navigator.clipboard.writeText(texto);
-            document.getElementById('status-atend').innerText = "Copiado com Formatação!";
-            setTimeout(() => document.getElementById('status-atend').innerText = "", 2000);
+            navigator.clipboard.writeText(textoPlano);
+            msgStatus("Copiado com sucesso!");
         } else if(acao === 'whatsapp') {
             const numLimpo = tel.replace(/\D/g, '');
-            if(numLimpo.length < 10) { alert("Digite um número de telefone válido"); return; }
-            const link = `https://wa.me/55${numLimpo}?text=${encodeURIComponent(texto)}`;
-            window.open(link, '_blank');
+            if(numLimpo.length < 10) { alert("Número inválido para WhatsApp"); return; }
+            window.open(`https://wa.me/55${numLimpo}?text=${encodeURIComponent(textoWhats)}`, '_blank');
+        } else if(acao === 'export') {
+            fazerDownload(`atendimento_${loja.replace(/\s/g, '_')}.txt`, textoPlano);
+            msgStatus("Arquivo Gerado!");
         }
     }
 
-    function limpar(id) { if(confirm("Limpar?")) { document.getElementById(id).reset(); setAtendData(); } }
+    function msgStatus(m) {
+        const s = document.getElementById('status-atend');
+        s.innerText = m;
+        setTimeout(() => s.innerText = "", 2500);
+    }
+
+    function limpar(id) { if(confirm("Deseja limpar todos os campos?")) { document.getElementById(id).reset(); setAtendData(); toggleEquip(); } }
     
     window.onload = setAtendData;
 </script>
