@@ -5,348 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Suporte TI - Oficial</title>
     <style>
-        /* Definição das cores - Tema Claro (Padrão) */
         :root {
             --primary: #2c3e50;
             --accent: #3498db;
             --bg: #f4f7f6;
             --container-bg: #ffffff;
             --text-color: #333333;
-            --label-color: #34495e;
             --input-bg: #ffffff;
             --input-border: #dddddd;
             --success: #27ae60;
             --danger: #e74c3c;
-            --nav-inactive: #dcdde1;
+            --whatsapp: #25d366;
         }
 
-        /* Definição das cores - Tema Escuro */
         [data-theme="dark"] {
             --primary: #ecf0f1;
-            --accent: #3498db;
             --bg: #1a1a1a;
             --container-bg: #2d2d2d;
             --text-color: #f5f5f5;
-            --label-color: #bdc3c7;
             --input-bg: #3d3d3d;
             --input-border: #444444;
-            --nav-inactive: #3d3d3d;
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text-color);
-            margin: 0; 
-            padding: 20px; 
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Botão de Alternar Tema */
-        .theme-switch-wrapper {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-        }
-
-        .theme-btn {
-            background: var(--primary);
-            color: var(--bg);
-            border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text-color); margin: 0; padding: 20px; transition: 0.3s; }
+        
+        .theme-switch { position: fixed; top: 15px; right: 15px; z-index: 100; }
+        .theme-btn { background: var(--primary); color: var(--bg); border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
         .nav-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .nav-btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background: var(--nav-inactive);
-            color: var(--text-color);
-            font-weight: bold;
-            transition: 0.3s;
-            font-size: 13px;
-        }
+        .nav-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; background: #dcdde1; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: var(--accent); color: white; }
 
-        .form-content { display: none; animation: fadeIn 0.4s; }
-        .form-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .container { 
-            background: var(--container-bg); 
-            padding: 25px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-            width: 100%; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            box-sizing: border-box;
-            transition: background-color 0.3s;
-        }
-
-        h2 { color: var(--accent); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--label-color); }
+        .container { background: var(--container-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box; }
+        h2 { color: var(--accent); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
         
         input, select, textarea { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1px solid var(--input-border); 
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            font-family: inherit;
+            width: 100%; padding: 10px; border: 1px solid var(--input-border); 
+            background: var(--input-bg); color: var(--text-color); border-radius: 4px; box-sizing: border-box; 
         }
-
-        textarea { height: 80px; resize: vertical; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         
-        button.action-btn { 
-            padding: 12px; border: none; border-radius: 4px; cursor: pointer; 
-            font-weight: bold; color: white; transition: 0.2s;
-        }
-
+        .action-btn { padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; text-decoration: none; text-align: center; font-size: 14px; }
         .btn-copy { background: var(--accent); }
-        .btn-export { background: var(--success); }
+        .btn-whatsapp { background: var(--whatsapp); }
         .btn-clear { background: var(--danger); grid-column: span 2; }
         
         .status-msg { text-align: center; font-size: 0.9em; margin-top: 10px; height: 20px; color: var(--success); font-weight: bold; }
-        .required { color: var(--danger); }
-        
-        #equipment-fields { 
-            display: none; 
-            background: rgba(0,0,0,0.05); 
-            padding: 10px; 
-            border-radius: 4px; 
-            margin-bottom: 15px; 
-            border: 1px dashed var(--accent); 
-        }
-
-        /* Estilo para campos somente leitura no Dark Mode */
-        input[readonly] { opacity: 0.7; cursor: not-allowed; }
+        #equipment-fields { display: none; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px dashed var(--accent); }
     </style>
 </head>
 <body>
 
-<div class="theme-switch-wrapper">
+<div class="theme-switch">
     <button class="theme-btn" onclick="toggleTheme()" id="theme-toggle">🌙 Modo Escuro</button>
 </div>
 
 <div class="nav-container">
-    <button class="nav-btn active" onclick="switchForm('balanca', this)">Carga Balança</button>
-    <button class="nav-btn" onclick="switchForm('mask2', this)">Tentativa de contato</button>
-    <button class="nav-btn" onclick="switchForm('mask3', this)">Registro de atendimento</button>
-    <button class="nav-btn" onclick="switchForm('mask4', this)">Atendimento de Caixa</button>
+    <button class="nav-btn active" onclick="switchForm('mask3', this)">Registro de atendimento</button>
+    <button class="nav-btn" onclick="switchForm('balanca', this)">Carga Balança</button>
 </div>
 
-<div id="balanca" class="form-content active">
-    <div class="container">
-        <h2>Registro de Carga</h2>
-        <form id="formBalanca">
-            <div class="form-group"><label>Loja:</label><input type="text" id="loja_bal"></div>
-            <div class="form-group"><label>Contato:</label><input type="text" id="contato_bal"></div>
-            <div class="form-group"><label>Balança:</label><input type="text" id="balanca_id"></div>
-            <div class="form-group">
-                <label>Departamento:</label>
-                <select id="depto_bal">
-                    <option value="Açougue">Açougue</option>
-                    <option value="Padaria">Padaria</option>
-                    <option value="Hortifruti">Hortifruti</option>
-                    <option value="Frios">Frios</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Motivo:</label><textarea id="motivo_bal"></textarea></div>
-            <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="processarBalanca('copy')">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="processarBalanca('export')">Exportar</button>
-                <button type="button" class="action-btn btn-clear" onclick="limpar('formBalanca')">Limpar</button>
-            </div>
-            <div id="status-balanca" class="status-msg"></div>
-        </form>
-    </div>
-</div>
-
-<div id="mask2" class="form-content">
-    <div class="container">
-        <h2>Registro de Contato</h2>
-        <form id="form2">
-            <div class="form-group"><label>Número do Chamado <span class="required">*</span></label><input type="text" id="chamado_cont"></div>
-            <div class="form-group"><label>Preciso falar com:</label><input type="text" id="destinatario_cont"></div>
-            <div class="form-group"><label>Ramais Utilizados:</label>
-                <div class="grid-2">
-                    <input type="text" id="ram1" placeholder="R1"><input type="text" id="ram2" placeholder="R2">
-                    <input type="text" id="ram3" placeholder="R3"><input type="text" id="ram4" placeholder="R4">
-                </div>
-            </div>
-            <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="processarContato('copy')">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="processarContato('export')">Exportar</button>
-                <button type="button" class="action-btn btn-clear" onclick="limpar('form2')">Limpar</button>
-            </div>
-            <div id="status-contato" class="status-msg"></div>
-        </form>
-    </div>
-</div>
-
-<div id="mask3" class="form-content">
+<div id="mask3" class="form-content active">
     <div class="container">
         <h2>Registro de Atendimento</h2>
         <form id="registroForm">
-            <div class="form-group"><label>Data e Hora:</label><input type="text" id="dataAtend" readonly></div>
-            <div class="form-group"><label>Tipo:</label><select id="tipoAtend" onchange="checkFCR()"><option value="FCR - RESOLVIDO NA HORA">FCR - RESOLVIDO NA HORA</option><option value="CHAMADO ABERTO">CHAMADO ABERTO</option></select></div>
-            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div><div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div></div>
-            <div class="grid-2"><div class="form-group"><label>Telefone 1:</label><input type="text" id="atend_tel1"></div><div class="form-group"><label>Telefone 2:</label><input type="text" id="atend_tel2"></div></div>
-            <div class="form-group"><label>E-mail:</label><input type="text" id="atend_email"></div>
-            <div class="form-group"><label>Categoria:</label><select id="cat_atend" onchange="toggleEquip()"><option value="Sistema">Sistema (Software)</option><option value="Equipamento">Equipamento (Hardware)</option></select></div>
-            <div id="equipment-fields"><div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div><div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat"></div></div>
-            <div class="form-group"><label>Problema Relatado:</label><textarea id="atend_prob"></textarea></div>
-            <div class="form-group"><label>Procedimento Realizado:</label><textarea id="atend_proc"></textarea></div>
+            <div class="form-group"><label>Data/Hora:</label><input type="text" id="dataAtend" oninput="mascara(this, 'data')"></div>
+            <div class="grid-2">
+                <div class="form-group"><label>Solicitante:</label><input type="text" id="nome_atend"></div>
+                <div class="form-group"><label>Loja/Setor:</label><input type="text" id="loja_atend"></div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group"><label>WhatsApp/Tel:</label><input type="text" id="atend_tel1" oninput="mascara(this, 'tel')" placeholder="(00) 00000-0000"></div>
+                <div class="form-group"><label>Categoria:</label>
+                    <select id="cat_atend" onchange="toggleEquip()">
+                        <option value="Sistema">Software</option>
+                        <option value="Equipamento">Hardware</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="equipment-fields">
+                <div class="grid-2">
+                    <div class="form-group"><label>Equipamento:</label><input type="text" id="eq_nome"></div>
+                    <div class="form-group"><label>Patrimônio:</label><input type="text" id="eq_pat" oninput="mascara(this, 'pat')"></div>
+                </div>
+            </div>
+
+            <div class="form-group"><label>Problema:</label><textarea id="atend_prob"></textarea></div>
+            <div class="form-group"><label>Procedimento:</label><textarea id="atend_proc"></textarea></div>
+
             <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="processarAtendimento('export')">Exportar</button>
-                <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar</button>
+                <button type="button" class="action-btn btn-copy" onclick="processarAtendimento('copy')">Copiar Texto</button>
+                <button type="button" class="action-btn btn-whatsapp" onclick="processarAtendimento('whatsapp')">Enviar WhatsApp</button>
+                <button type="button" class="action-btn btn-clear" onclick="limpar('registroForm')">Limpar Tudo</button>
             </div>
             <div id="status-atend" class="status-msg"></div>
         </form>
     </div>
 </div>
 
-<div id="mask4" class="form-content">
-    <div class="container">
-        <h2>Atendimento de Caixa</h2>
-        <form id="formCaixa">
-            <div class="form-group"><label>Tipo:</label><input type="text" id="tipo_cx" value="Resolvido" readonly></div>
-            <div class="grid-2"><div class="form-group"><label>Solicitante:</label><input type="text" id="sol_cx"></div><div class="form-group"><label>Loja:</label><input type="text" id="loja_cx"></div></div>
-            <div class="grid-2"><div class="form-group"><label>Telefone:</label><input type="text" id="tel_cx"></div><div class="form-group"><label>Caixa Nº:</label><input type="text" id="num_cx"></div></div>
-            <div class="form-group"><label>Problema Relatado:</label><textarea id="prob_cx"></textarea></div>
-            <div class="form-group"><label>Procedimento Executado:</label><textarea id="proc_cx"></textarea></div>
-            <div class="btn-group">
-                <button type="button" class="action-btn btn-copy" onclick="processarCaixa('copy')">Copiar</button>
-                <button type="button" class="action-btn btn-export" onclick="processarCaixa('export')">Exportar</button>
-                <button type="button" class="action-btn btn-clear" onclick="limpar('formCaixa')">Limpar</button>
-            </div>
-            <div id="status-caixa" class="status-msg"></div>
-        </form>
-    </div>
-</div>
-
 <script>
-    // LÓGICA DE TEMA (DARK MODE)
+    // --- LÓGICA DE MÁSCARAS ---
+    const lógicas = {
+        tel: v => v.replace(/\D/g, '').replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 15),
+        data: v => v.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{2})(\d)/, '$1/$2').replace(/(\d{4})(\d)/, '$1 $2').replace(/(\d{2})(\d)/, '$1:$2').slice(0, 16),
+        pat: v => v.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^([A-Z]{3})(\d)/, '$1-$2').slice(0, 10)
+    };
+
+    function mascara(i, t) { setTimeout(() => { i.value = lógicas[t](i.value); }, 1); }
+
+    // --- LÓGICA DE TEMA ---
     function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        
-        document.documentElement.setAttribute("data-theme", newTheme);
-        localStorage.setItem("theme", newTheme);
-        updateThemeButton(newTheme);
+        const t = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+        localStorage.setItem("theme", t);
+        document.getElementById("theme-toggle").innerText = t === "dark" ? "☀️ Modo Claro" : "🌙 Modo Escuro";
     }
+    if(localStorage.getItem("theme") === "dark") toggleTheme();
 
-    function updateThemeButton(theme) {
-        const btn = document.getElementById("theme-toggle");
-        btn.innerText = theme === "dark" ? "☀️ Modo Claro" : "🌙 Modo Escuro";
-    }
-
-    // Carregar tema salvo
-    const savedTheme = localStorage.getItem("theme") || "light";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    updateThemeButton(savedTheme);
-
-    // FUNÇÕES DE SUPORTE (Mantidas e Otimizadas)
-    function switchForm(id, btn) {
-        document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        if(id === 'mask3') setAtendData();
-    }
-
-    function limpar(id) {
-        if(confirm("Limpar campos?")) {
-            document.getElementById(id).reset();
-            if(id === 'registroForm') { setAtendData(); toggleEquip(); checkFCR(); }
-        }
-    }
-
-    function showStatus(id, msg) {
-        const el = document.getElementById(id);
-        el.innerText = msg;
-        setTimeout(() => el.innerText = '', 2500);
-    }
-
-    function fazerDownload(nomeArquivo, texto) {
-        const blob = new Blob([texto], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = nomeArquivo;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    }
-
-    // PROCESSAMENTOS (MANTIDOS)
-    function processarBalanca(acao) {
-        const texto = `--- CARGA BALANÇA ---\nDATA: ${new Date().toLocaleString()}\nLOJA: ${document.getElementById('loja_bal').value}\nCONTATO: ${document.getElementById('contato_bal').value}\nBALANÇA: ${document.getElementById('balanca_id').value}\nDEPTO: ${document.getElementById('depto_bal').value}\nMOTIVO: ${document.getElementById('motivo_bal').value}`;
-        if(acao === 'copy') {
-            navigator.clipboard.writeText(texto);
-            showStatus('status-balanca', 'Copiado!');
-        } else {
-            fazerDownload(`carga_loja_${document.getElementById('loja_bal').value || 'ti'}.txt`, texto);
-        }
-    }
-
-    function processarContato(acao) {
-        const chamado = document.getElementById('chamado_cont').value;
-        const r1 = document.getElementById('ram1').value.trim();
-        const ramais = [r1, document.getElementById('ram2').value, document.getElementById('ram3').value, document.getElementById('ram4').value].filter(r => r !== "").join(", ");
-        if(!chamado || !r1) { alert("Preencha Chamado e Ramal 1"); return; }
-        const texto = `--- TENTATIVA DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nCHAMADO: ${chamado}\nDESTINATÁRIO: ${document.getElementById('destinatario_cont').value || 'Não informado'}\nRAMAIS: ${ramais}\nSTATUS: Sem êxito telefônico.`;
-        if(acao === 'copy') {
-            navigator.clipboard.writeText(texto);
-            showStatus('status-contato', 'Copiado!');
-        } else {
-            fazerDownload(`contato_${chamado}.txt`, texto);
-        }
-    }
-
-    function setAtendData() { document.getElementById('dataAtend').value = new Date().toLocaleString(); }
+    // --- FUNÇÕES CORE ---
     function toggleEquip() { document.getElementById('equipment-fields').style.display = document.getElementById('cat_atend').value === 'Equipamento' ? 'block' : 'none'; }
-    function checkFCR() { /* Opcional: destaque visual no FCR */ }
+    
+    function setAtendData() { 
+        const agora = new Date();
+        const formatado = agora.toLocaleString('pt-BR').slice(0, 16);
+        document.getElementById('dataAtend').value = formatado;
+    }
 
     function processarAtendimento(acao) {
-        const cat = document.getElementById('cat_atend').value;
-        let infoEq = (cat === 'Equipamento') ? `EQUIPAMENTO: ${document.getElementById('eq_nome').value}\nPATRIMÔNIO: ${document.getElementById('eq_pat').value}\n` : "";
-        const texto = `==================================\nPROBLEMA RELATADO:\n${document.getElementById('atend_prob').value}\n\nPROCEDIMENTO REALIZADO:\n${document.getElementById('atend_proc').value}\n==================================\n--- INFORMAÇÕES DE CONTATO ---\nDATA/HORA: ${document.getElementById('dataAtend').value}\nTIPO: ${document.getElementById('tipoAtend').value}\nSOLICITANTE: ${document.getElementById('nome_atend').value}\nLOJA/SETOR: ${document.getElementById('loja_atend').value}\nTELEFONE: ${document.getElementById('atend_tel1').value}\nCATEGORIA: ${cat}\n${infoEq}==================================`;
+        const nome = document.getElementById('nome_atend').value;
+        const loja = document.getElementById('loja_atend').value;
+        const tel = document.getElementById('atend_tel1').value;
+        const prob = document.getElementById('atend_prob').value;
+        const proc = document.getElementById('atend_proc').value;
+        
+        const texto = `*REGISTRO DE ATENDIMENTO TI*\n\n` +
+                      `*Solicitante:* ${nome} - ${loja}\n` +
+                      `*Data:* ${document.getElementById('dataAtend').value}\n` +
+                      `----------------------------\n` +
+                      `*PROBLEMA:* ${prob}\n` +
+                      `*SOLUÇÃO:* ${proc}\n` +
+                      `----------------------------\n` +
+                      `_Atendimento realizado pelo Portal de Suporte._`;
+
         if(acao === 'copy') {
             navigator.clipboard.writeText(texto);
-            showStatus('status-atend', 'Copiado!');
-        } else {
-            fazerDownload(`atendimento.txt`, texto);
+            document.getElementById('status-atend').innerText = "Copiado com Formatação!";
+            setTimeout(() => document.getElementById('status-atend').innerText = "", 2000);
+        } else if(acao === 'whatsapp') {
+            const numLimpo = tel.replace(/\D/g, '');
+            if(numLimpo.length < 10) { alert("Digite um número de telefone válido"); return; }
+            const link = `https://wa.me/55${numLimpo}?text=${encodeURIComponent(texto)}`;
+            window.open(link, '_blank');
         }
     }
 
-    function processarCaixa(acao) {
-        const texto = `==================================\nPROBLEMA RELATADO:\n${document.getElementById('prob_cx').value}\n\nPROCEDIMENTO EXECUTADO:\n${document.getElementById('proc_cx').value}\n==================================\n--- INFORMAÇÕES DE CONTATO ---\nDATA/HORA: ${new Date().toLocaleString()}\nLOJA: ${document.getElementById('loja_cx').value}\nCAIXA Nº: ${document.getElementById('num_cx').value}\n==================================`;
-        if(acao === 'copy') {
-            navigator.clipboard.writeText(texto);
-            showStatus('status-caixa', 'Copiado!');
-        } else {
-            fazerDownload(`caixa.txt`, texto);
-        }
-    }
-
+    function limpar(id) { if(confirm("Limpar?")) { document.getElementById(id).reset(); setAtendData(); } }
+    
     window.onload = setAtendData;
 </script>
 </body>
