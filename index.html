@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Facilitador de Chamados</title>
+    <title>Portal Facilitador de Chamados Ultra Pro</title>
     <style>
         :root {
             --bg-color: #f4f6f9;
@@ -14,7 +14,12 @@
             --primary-hover: #0056b3;
             --accent-color: #28a745;
             --accent-hover: #218838;
+            --danger-color: #dc3545;
+            --danger-hover: #bd2130;
             --tab-inactive: #e9ecef;
+            --script-bg: #e2e8f0;
+            --script-text: #334155;
+            --badge-bg: #007bff;
         }
 
         [data-theme="dark"] {
@@ -26,7 +31,12 @@
             --primary-hover: #2b4764;
             --accent-color: #4bbf73;
             --accent-hover: #3ca360;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
             --tab-inactive: #2d2d2d;
+            --script-bg: #334155;
+            --script-text: #f1f5f9;
+            --badge-bg: #375a7f;
         }
 
         body {
@@ -39,7 +49,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             background: var(--card-bg);
             padding: 25px;
@@ -57,12 +67,24 @@
             margin-bottom: 20px;
         }
 
-        h1 {
-            margin: 0;
-            font-size: 24px;
+        h1 { margin: 0; font-size: 24px; }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        /* Botão Dark Mode */
+        .timer-box {
+            font-family: monospace;
+            font-size: 16px;
+            background: var(--tab-inactive);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+        }
+
         .theme-toggle {
             background: transparent;
             border: 2px solid var(--primary-color);
@@ -78,7 +100,25 @@
             color: #fff;
         }
 
-        /* Estrutura das Abas */
+        /* Painel de Estatísticas */
+        .stats-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: var(--tab-inactive);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .stat-badge {
+            background: var(--card-bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Abas */
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -91,7 +131,7 @@
             color: var(--text-color);
             border: 1px solid var(--border-color);
             border-bottom: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             cursor: pointer;
             font-weight: 600;
             margin-right: 5px;
@@ -107,30 +147,57 @@
             color: var(--primary-color);
         }
 
-        .tab-content {
-            display: none;
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Scripts Rápidos */
+        .script-section {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
-        .tab-content.active {
-            display: block;
+        .btn-script {
+            background-color: var(--script-bg);
+            color: var(--script-text);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: opacity 0.2s;
         }
+        .btn-script:hover { opacity: 0.8; }
 
         /* Formulários */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
+        .form-group { margin-bottom: 15px; }
         .form-group.row-inputs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+        .input-with-lock {
+            display: flex;
+            gap: 5px;
         }
+        .lock-btn {
+            background: var(--tab-inactive);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .lock-btn.locked {
+            background: #ffc107;
+            color: #000;
+            border-color: #ffc107;
+        }
+
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
 
         input[type="text"], select, textarea {
             width: 100%;
@@ -142,18 +209,10 @@
             box-sizing: border-box;
             font-size: 14px;
         }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        textarea { resize: vertical; min-height: 80px; }
 
         /* Ações */
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
 
         .btn {
             flex: 1;
@@ -162,28 +221,67 @@
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             transition: background-color 0.2s;
             color: #ffffff;
         }
+        .btn-copy { background-color: var(--primary-color); }
+        .btn-copy:hover { background-color: var(--primary-hover); }
+        .btn-download { background-color: var(--accent-color); }
+        .btn-download:hover { background-color: var(--accent-hover); }
+        .btn-clear { background-color: var(--danger-color); }
+        .btn-clear:hover { background-color: var(--danger-hover); }
 
-        .btn-copy {
-            background-color: var(--primary-color);
+        /* Histórico */
+        .history-section {
+            margin-top: 35px;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 20px;
         }
-        .btn-copy:hover {
-            background-color: var(--primary-hover);
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-hist {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            width: 200px;
+            font-size: 13px;
+        }
+        .history-table-container {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th { background-color: var(--tab-inactive); position: sticky; top: 0; }
+        .btn-view-hist {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
         }
 
-        .btn-download {
-            background-color: var(--accent-color);
-        }
-        .btn-download:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -191,29 +289,52 @@
 <div class="container">
     <header>
         <h1>Facilitador de Chamados</h1>
-        <button class="theme-toggle" id="themeToggle">Modo Escuro</button>
+        <div class="header-controls">
+            <div class="timer-box" id="timer" title="Tempo do chamado atual (Alt+T para reiniciar)">TMA: 00:00</div>
+            <button class="theme-toggle" id="themeToggle">Modo Escuro</button>
+        </div>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'registroCarga')">Registro de Carga</button>
-        <button class="tab-btn" onclick="openTab(event, 'tentativaContato')">Tentativa de Contato</button>
-        <button class="tab-btn" onclick="openTab(event, 'registroAtendimento')">Registro de Atendimento</button>
-        <button class="tab-btn" onclick="openTab(event, 'atendimentoCaixa')">Atendimento Caixa</button>
+    <!-- Contador de Produtividade -->
+    <div class="stats-panel">
+        <span>📊 Atendimentos Hoje:</span>
+        <div class="stat-badge">Carga: <span id="count-Carga">0</span></div>
+        <div class="stat-badge">Contato: <span id="count-Contato">0</span></div>
+        <div class="stat-badge">Atendimento: <span id="count-Atendimento">0</span></div>
+        <div class="stat-badge">Caixa: <span id="count-Caixa">0</span></div>
     </div>
 
+    <div class="tabs">
+        <button class="tab-btn active" id="btn-tab-carga" onclick="openTab(event, 'registroCarga')">Registro de Carga (Alt+1)</button>
+        <button class="tab-btn" id="btn-tab-contato" onclick="openTab(event, 'tentativaContato')">Tentativa de Contato (Alt+2)</button>
+        <button class="tab-btn" id="btn-tab-atendimento" onclick="openTab(event, 'registroAtendimento')">Atendimento (Alt+3)</button>
+        <button class="tab-btn" id="btn-tab-caixa" onclick="openTab(event, 'atendimentoCaixa')">Caixa (Alt+4)</button>
+    </div>
+
+    <!-- ABA 1: Registro de Carga -->
     <div id="registroCarga" class="tab-content active">
+        <div class="script-section">
+            <button class="btn-script" onclick="insertScript('formCarga', 'Motivo da Carga', 'contato')">📞 Saudação + Contato</button>
+            <button class="btn-script" onclick="insertScript('formCarga', 'Motivo da Carga', 'rotina')">🔄 Atualização de Rotina</button>
+        </div>
         <form id="formCarga">
             <div class="form-group">
                 <label>Loja:</label>
-                <input type="text" name="Loja" placeholder="Ex: Loja 05">
+                <div class="input-with-lock">
+                    <input type="text" name="Loja" placeholder="Ex: 05" onblur="formatLojaField(this)">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor para o próximo chamado">🔓</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Contato:</label>
-                <input type="text" name="Contato" placeholder="Nome do funcionário">
+                <div class="input-with-lock">
+                    <input type="text" name="Contato" placeholder="Nome do funcionário">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor">🔓</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Balança:</label>
-                <input type="text" name="Balança" placeholder="Ex: Filizola, Toledo, Toledo TI5">
+                <input type="text" name="Balança" placeholder="Ex: Toledo, Filizola">
             </div>
             <div class="form-group">
                 <label>Motivo da Carga:</label>
@@ -221,12 +342,17 @@
             </div>
         </form>
         <div class="actions">
-            <button class="btn btn-copy" onclick="copyToClipboard('formCarga')">Copiar Informações</button>
-            <button class="btn btn-download" onclick="downloadTxt('formCarga', 'Registro_Carga')">Baixar TXT</button>
+            <button class="btn btn-copy" onclick="triggerAction('formCarga', 'Carga', 'copy')">Copiar (Alt+C)</button>
+            <button class="btn btn-download" onclick="triggerAction('formCarga', 'Carga', 'download')">Baixar TXT</button>
+            <button class="btn btn-clear" onclick="clearForm('formCarga')">Limpar (Alt+L)</button>
         </div>
     </div>
 
+    <!-- ABA 2: Tentativa de Contato -->
     <div id="tentativaContato" class="tab-content">
+        <div class="script-section">
+            <button class="btn-script" onclick="insertScript('formContato', 'Chamado', 'ausente', true)">❌ Sem Retorno (3 Tentativas)</button>
+        </div>
         <form id="formContato">
             <div class="form-group">
                 <label>Chamado:</label>
@@ -241,20 +367,32 @@
             </div>
         </form>
         <div class="actions">
-            <button class="btn btn-copy" onclick="copyToClipboard('formContato')">Copiar Informações</button>
-            <button class="btn btn-download" onclick="downloadTxt('formContato', 'Tentativa_Contato')">Baixar TXT</button>
+            <button class="btn btn-copy" onclick="triggerAction('formContato', 'Contato', 'copy')">Copiar (Alt+C)</button>
+            <button class="btn btn-download" onclick="triggerAction('formContato', 'Contato', 'download')">Baixar TXT</button>
+            <button class="btn btn-clear" onclick="clearForm('formContato')">Limpar (Alt+L)</button>
         </div>
     </div>
 
+    <!-- ABA 3: Registro de Atendimento -->
     <div id="registroAtendimento" class="tab-content">
+        <div class="script-section">
+            <button class="btn-script" onclick="insertScript('formAtendimento', 'Procedimento Executado', 'reinicio')">🔌 Reinício de Equipamento</button>
+            <button class="btn-script" onclick="insertScript('formAtendimento', 'Procedimento Executado', 'banco')">🗄️ Ajuste em Banco de Dados</button>
+        </div>
         <form id="formAtendimento">
             <div class="form-group">
                 <label>Solicitante:</label>
-                <input type="text" name="Solicitante" placeholder="Quem solicitou">
+                <div class="input-with-lock">
+                    <input type="text" name="Solicitante" placeholder="Quem solicitou">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor">🔓</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Loja/Setor:</label>
-                <input type="text" name="Loja_Setor" placeholder="Ex: Loja 10 / Faturamento">
+                <div class="input-with-lock">
+                    <input type="text" name="Loja_Setor" placeholder="Ex: 10 / Faturamento" onblur="formatLojaField(this)">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor">🔓</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Categoria:</label>
@@ -267,15 +405,12 @@
                 <label>Equipamento do PDV:</label>
                 <select name="Equipamento PDV">
                     <option value="">-- Selecione o Equipamento --</option>
-                    <option value="Impressora">Impressora Fiscal / Não Fiscal</option>
+                    <option value="Impressora Fiscal / Não Fiscal">Impressora Fiscal / Não Fiscal</option>
                     <option value="Scanner / Leitor de Código">Scanner / Leitor de Código</option>
-                    <option value="Scanner de mão">SAT / MFE</option>
-                    <option value="Teclado">Teclado Reduzido Gertec</option>
-                    <option value="Monitor">Monitor / Display Cliente</option>
+                    <option value="Teclado Reduzido Gertec">Teclado Reduzido Gertec</option>
                     <option value="Pinpad / TEF">Pinpad / TEF</option>
                     <option value="CPU do Caixa">CPU do Caixa</option>
-                    <option value="Balança">Nobreak</option>
-                    <option value="Balança de conferencia">Nobreak</option>
+                    <option value="Nobreak">Nobreak</option>
                     <option value="Gaveta de Dinheiro">Gaveta de Dinheiro</option>
                 </select>
             </div>
@@ -289,20 +424,29 @@
             </div>
         </form>
         <div class="actions">
-            <button class="btn btn-copy" onclick="copyToClipboard('formAtendimento')">Copiar Informações</button>
-            <button class="btn btn-download" onclick="downloadTxt('formAtendimento', 'Registro_Atendimento')">Baixar TXT</button>
+            <button class="btn btn-copy" onclick="triggerAction('formAtendimento', 'Atendimento', 'copy')">Copiar (Alt+C)</button>
+            <button class="btn btn-download" onclick="triggerAction('formAtendimento', 'Atendimento', 'download')">Baixar TXT</button>
+            <button class="btn btn-clear" onclick="clearForm('formAtendimento')">Limpar (Alt+L)</button>
         </div>
     </div>
 
+    <!-- ABA 4: Atendimento Caixa -->
     <div id="atendimentoCaixa" class="tab-content">
+        <div class="script-section">
+            <button class="btn-script" onclick="insertScript('formCaixa', 'Problema', 'travado')">🖥️ Sistema Travado/Lento</button>
+            <button class="btn-script" onclick="insertScript('formCaixa', 'Problema', 'tef')">💳 Erro de TEF/Comunicação</button>
+        </div>
         <form id="formCaixa">
             <div class="form-group">
                 <label>Loja:</label>
-                <input type="text" name="Loja" placeholder="Ex: Loja 02">
+                <div class="input-with-lock">
+                    <input type="text" name="Loja" placeholder="Ex: 02" onblur="formatLojaField(this)">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor">🔓</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Caixa:</label>
-                <input type="text" name="Caixa" placeholder="Ex: PDV 04">
+                <input type="text" name="Caixa" placeholder="Ex: 4" onblur="formatPdvField(this)">
             </div>
             <div class="form-group">
                 <label>Problema:</label>
@@ -310,34 +454,94 @@
             </div>
             <div class="form-group">
                 <label>Solicitante:</label>
-                <input type="text" name="Solicitante" placeholder="Nome do operador ou fiscal">
+                <div class="input-with-lock">
+                    <input type="text" name="Solicitante" placeholder="Nome do operador ou fiscal">
+                    <button type="button" class="lock-btn" onclick="toggleLock(this)" title="Fixar valor">🔓</button>
+                </div>
             </div>
         </form>
         <div class="actions">
-            <button class="btn btn-copy" onclick="copyToClipboard('formCaixa')">Copiar Informações</button>
-            <button class="btn btn-download" onclick="downloadTxt('formCaixa', 'Atendimento_Caixa')">Baixar TXT</button>
+            <button class="btn btn-copy" onclick="triggerAction('formCaixa', 'Caixa', 'copy')">Copiar (Alt+C)</button>
+            <button class="btn btn-download" onclick="triggerAction('formCaixa', 'Caixa', 'download')">Baixar TXT</button>
+            <button class="btn btn-clear" onclick="clearForm('formCaixa')">Limpar (Alt+L)</button>
+        </div>
+    </div>
+
+    <!-- HISTÓRICO RÁPIDO DA SESSÃO -->
+    <div class="history-section">
+        <div class="history-header">
+            <h3>📋 Histórico de Chamados</h3>
+            <div>
+                <input type="text" id="searchHistory" class="search-hist" placeholder="🔍 Buscar no histórico..." oninput="renderHistory()">
+                <button class="btn-script" style="background-color: var(--danger-color); color: white;" onclick="clearHistory()">Limpar Tudo</button>
+            </div>
+        </div>
+        <div class="history-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Tipo/Aba</th>
+                        <th>Resumo dos Dados</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: gray;">Nenhum chamado registrado nesta sessão.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
-    // Gerenciador de Abas
+    let seconds = 0;
+    let timerInterval = null;
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        seconds = 0;
+        timerInterval = setInterval(() => {
+            seconds++;
+            const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const secs = String(seconds % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `TMA: ${mins}:${secs}`;
+        }, 1000);
+    }
+    startTimer();
+
     function openTab(evt, tabId) {
         const tabcontents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < tabcontents.length; i++) {
-            tabcontents[i].classList.remove("active");
-        }
+        for (let i = 0; i < tabcontents.length; i++) tabcontents[i].classList.remove("active");
 
         const tablinks = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tablinks.length; i++) {
-            tablinks[i].classList.remove("active");
-        }
+        for (let i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
 
         document.getElementById(tabId).classList.add("active");
-        evt.currentTarget.classList.add("active");
+        
+        if(evt) {
+            evt.currentTarget.classList.add("active");
+        } else {
+            // Mapeia o ID do botão correto se for disparado via atalho de teclado
+            const map = { 'registroCarga': 'btn-tab-carga', 'tentativaContato': 'btn-tab-contato', 'registroAtendimento': 'btn-tab-atendimento', 'atendimentoCaixa': 'btn-tab-caixa' };
+            document.getElementById(map[tabId]).classList.add("active");
+        }
+        startTimer();
     }
 
-    // Exibir campo de equipamentos se categoria for Equipamento
+    // Gerenciador de "Fixar" Campos (Lock)
+    function toggleLock(btn) {
+        if (btn.classList.contains('locked')) {
+            btn.classList.remove('locked');
+            btn.textContent = '🔓';
+        } else {
+            btn.classList.add('locked');
+            btn.textContent = '🔒';
+        }
+    }
+
     function toggleEquipamentoField() {
         const categoria = document.getElementById("categoriaSelect").value;
         const equipGroup = document.getElementById("equipamentoGroup");
@@ -345,15 +549,219 @@
             equipGroup.classList.remove("hidden");
         } else {
             equipGroup.classList.add("hidden");
-            equipGroup.querySelector('select').value = ""; // Limpa a seleção se mudar de aba
+            equipGroup.querySelector('select').value = "";
         }
     }
 
-    // Alternar Modo Escuro
+    function formatLojaField(input) {
+        let val = input.value.trim();
+        if(!val) return;
+        if (!isNaN(val)) input.value = `Loja ${String(val).padStart(2, '0')}`;
+    }
+
+    function formatPdvField(input) {
+        let val = input.value.trim();
+        if(!val) return;
+        if (!isNaN(val)) input.value = `PDV ${String(val).padStart(2, '0')}`;
+    }
+
+    function getGreeting() {
+        const hr = new Date().getHours();
+        if (hr < 12) return "Bom dia!";
+        if (hr < 18) return "Boa tarde!";
+        return "Boa noite!";
+    }
+
+    function insertScript(formId, fieldName, type, replaceField = false) {
+        const form = document.getElementById(formId);
+        const field = form.querySelector(`[name="${fieldName}"]`);
+        if (!field) return;
+
+        const greeting = getGreeting();
+        let text = "";
+
+        switch(type) {
+            case 'contato': text = `${greeting} Realizado contato com a filial para alinhamento e envio da carga de balança requisitada.`; break;
+            case 'rotina': text = `Carga enviada preventivamente devido à atualização de preços/cadastro na rotina do sistema.`; break;
+            case 'ausente': text = `Efetuadas 3 tentativas de contato via ramal com o setor solicitante, porém sem sucesso no retorno.`; break;
+            case 'reinicio': text = `Orientado o operador a desligar o equipamento, verificar cabos de energia/dados e reiniciar a máquina.`; break;
+            case 'banco': text = `Verificado status de sincronização, realizada a manutenção/ajuste na tabela local e reiniciada a aplicação.`; break;
+            case 'travado': text = `Operador informa que a tela de vendas congelou e não aceita comandos no teclado/leitor.`; break;
+            case 'tef': text = `Mensagem de erro na leitura do cartão ou falha de comunicação com a operadora de TEF.`; break;
+        }
+
+        field.value = replaceField ? text : (field.value ? field.value + "\n" + text : text);
+    }
+
+    function formatFormData(formId) {
+        const form = document.getElementById(formId);
+        const formData = new FormData(form);
+        let textResult = "";
+        let ramais = [];
+        let hasData = false;
+
+        for (let [key, value] of formData.entries()) {
+            if (value.trim() !== "") hasData = true;
+            if (key === "Equipamento PDV" && !value) continue;
+            if (key.startsWith("Ramal")) {
+                if (value.trim() !== "") ramais.push(value.trim());
+                continue;
+            }
+            textResult += `${key.replace('_', '/')}: ${value}\n`;
+        }
+
+        if (!hasData) return null;
+
+        if (ramais.length > 0) {
+            textResult += `Ramais Tentados: ${ramais.join(' | ')}\n`;
+        }
+
+        const currentTimer = document.getElementById('timer').textContent;
+        textResult += `\nDuração do Atendimento: ${currentTimer.replace('TMA: ', '')}`;
+        return textResult.trim();
+    }
+
+    function triggerAction(formId, label, actionType) {
+        const text = formatFormData(formId);
+        if (!text) {
+            alert("Preencha algum campo primeiro!");
+            return;
+        }
+
+        if (actionType === 'copy') {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copiado com sucesso!");
+                saveToHistory(label, text);
+                updateStats(label);
+                startTimer();
+            });
+        } else if (actionType === 'download') {
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${label.replace(' ', '_')}_${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            saveToHistory(label, text);
+            updateStats(label);
+            startTimer();
+        }
+    }
+
+    // Estatísticas e Contadores
+    function updateStats(label) {
+        let stats = JSON.parse(localStorage.getItem('ticket_stats')) || { Carga: 0, Contato: 0, Atendimento: 0, Caixa: 0 };
+        if (stats.hasOwnProperty(label)) {
+            stats[label]++;
+            localStorage.setItem('ticket_stats', JSON.stringify(stats));
+            renderStats();
+        }
+    }
+
+    function renderStats() {
+        const stats = JSON.parse(localStorage.getItem('ticket_stats')) || { Carga: 0, Contato: 0, Atendimento: 0, Caixa: 0 };
+        for (let key in stats) {
+            const el = document.getElementById(`count-${key}`);
+            if(el) el.textContent = stats[key];
+        }
+    }
+
+    // Histórico com Filtro de Busca
+    function saveToHistory(type, fullText) {
+        let history = JSON.parse(localStorage.getItem('ticket_history')) || [];
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const summary = fullText.split('\n').filter(line => line.trim() !== "").slice(0, 2).join(' | ');
+
+        history.unshift({ time: timeStr, type: type, summary: summary, fullText: fullText });
+        localStorage.setItem('ticket_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('ticket_history')) || [];
+        const filter = document.getElementById('searchHistory').value.toLowerCase();
+        const body = document.getElementById('historyBody');
+        
+        const filteredHistory = history.filter(item => 
+            item.type.toLowerCase().includes(filter) || 
+            item.summary.toLowerCase().includes(filter)
+        );
+
+        if (filteredHistory.length === 0) {
+            body.innerHTML = `<tr><td colspan="4" style="text-align: center; color: gray;">Nenhum chamado corresponde à busca.</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = filteredHistory.map((item, index) => `
+            <tr>
+                <td><b>${item.time}</b></td>
+                <td><span style="color: var(--primary-color); font-weight:bold;">${item.type}</span></td>
+                <td style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.summary}">${item.summary}</td>
+                <td><button class="btn-view-hist" onclick="copyHistoryText(unescape('${escape(item.fullText)}'))">Copiar Novamente</button></td>
+            </tr>
+        `).join('');
+    }
+
+    function copyHistoryText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Chamado antigo copiado novamente!");
+        });
+    }
+
+    function clearHistory() {
+        if(confirm("Deseja apagar o histórico e zerar os contadores?")) {
+            localStorage.removeItem('ticket_history');
+            localStorage.removeItem('ticket_stats');
+            renderHistory();
+            renderStats();
+        }
+    }
+
+    function clearForm(formId) {
+        if(confirm("Deseja limpar os campos editáveis desta aba?")) {
+            const form = document.getElementById(formId);
+            const inputs = form.querySelectorAll('input, textarea, select');
+            
+            inputs.forEach(input => {
+                const lockBtn = input.parentElement.querySelector('.lock-btn');
+                // Só limpa se o campo NÃO possuir um botão de cadeado trancado
+                if (!lockBtn || !lockBtn.classList.contains('locked')) {
+                    if (input.tagName === 'SELECT') input.selectedIndex = 0;
+                    else input.value = '';
+                }
+            });
+
+            if(formId === 'formAtendimento') toggleEquipamentoField();
+            startTimer();
+        }
+    }
+
+    // Gerenciador de Atalhos de Teclado
+    window.addEventListener('keydown', function(e) {
+        if (e.altKey) {
+            e.preventDefault(); // Evita conflitos nativos do navegador
+            if (e.key === '1') openTab(null, 'registroCarga');
+            if (e.key === '2') openTab(null, 'tentativaContato');
+            if (e.key === '3') openTab(null, 'registroAtendimento');
+            if (e.key === '4') openTab(null, 'atendimentoCaixa');
+            
+            // Ações na aba ativa
+            const activeTab = document.querySelector('.tab-content.active');
+            const formId = activeTab.querySelector('form').id;
+            const labelMap = { 'formCarga':'Carga', 'formContato':'Contato', 'formAtendimento':'Atendimento', 'formCaixa':'Caixa' };
+
+            if (e.key.toLowerCase() === 'c') triggerAction(formId, labelMap[formId], 'copy');
+            if (e.key.toLowerCase() === 'l') clearForm(formId);
+            if (e.key.toLowerCase() === 't') startTimer();
+        }
+    });
+
+    // Dark Mode
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        if (currentTheme === 'dark') {
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
             document.documentElement.removeAttribute('data-theme');
             themeToggle.textContent = 'Modo Escuro';
         } else {
@@ -362,65 +770,9 @@
         }
     });
 
-    // Função auxiliar para gerar a string formatada do formulário
-    function formatFormData(formId) {
-        const form = document.getElementById(formId);
-        const formData = new FormData(form);
-        let textResult = "";
-        let ramais = [];
-
-        for (let [key, value] of formData.entries()) {
-            // Ignorar campos vazios de Equipamento se não for selecionado
-            if (key === "Equipamento PDV" && !value) continue;
-            
-            // Agrupar ramais na mesma linha para ficar mais limpo
-            if (key.startsWith("Ramal")) {
-                if (value.trim() !== "") ramais.push(value.trim());
-                continue;
-            }
-
-            textResult += `${key.replace('_', '/')}: ${value}\n`;
-        }
-
-        if (ramais.length > 0) {
-            textResult += `Ramais Tentados: ${ramais.join(' | ')}\n`;
-        }
-
-        return textResult.trim();
-    }
-
-    // Função Copiar
-    function copyToClipboard(formId) {
-        const text = formatFormData(formId);
-        if (!text) {
-            alert("Preencha algum campo antes de copiar!");
-            return;
-        }
-
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Informações copiadas com sucesso!");
-        }).catch(err => {
-            console.error('Erro ao copiar: ', err);
-        });
-    }
-
-    // Função Baixar TXT
-    function downloadTxt(formId, filename) {
-        const text = formatFormData(formId);
-        if (!text) {
-            alert("Preencha algum campo antes de baixar!");
-            return;
-        }
-
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `${filename}_${new Date().toISOString().slice(0,10)}.txt`;
-        link.link = "Click to download";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    // Inicialização
+    renderHistory();
+    renderStats();
 </script>
 
 </body>
